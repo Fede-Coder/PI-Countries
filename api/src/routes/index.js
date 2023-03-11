@@ -1,7 +1,10 @@
 const { Router } = require('express');
-const { getCountries } = require('../controllers/getCountries')
-const { getCountryById } = require('../controllers/getCountryById')
-const { getCountriesByName } = require('../controllers/getCountriesByName')
+const { getCountries } = require('../controllers/countries/getCountries')
+const { getCountryById } = require('../controllers/countries/getCountryById')
+const { searchByName } = require('../controllers/countries/searchByName')
+
+const { getActivities } = require('../controllers/activities/getActivities')
+const { createActivities } = require('../controllers/activities/createActivities')
 
 
 const router = Router();
@@ -13,7 +16,7 @@ router.get('/countries', async (req, res, next) => {
         const result = await getCountries()
         res.status(200).send(result)
     } catch (error) {
-        res.status(400).json({error: error.message})
+        res.status(404).json({error: error.message})
     }
 })
 
@@ -30,29 +33,29 @@ router.get('/countries/:idCountry', async (req, res) => {
 router.get('/countries', async (req, res) => {
     const { name } = req.query;
     try {
-        const result = await getCountriesByName(name)
+        const result = await searchByName(name)
         res.status(200).json(result)        
     } catch (error) {
         res.status(400).json({error: error.message})
     }
 })
 
-router.post('/activities', (req, res) => {
-    const {} = req. body;
+router.post('/activities', async (req, res) => {
+    const {country, name, difficulty, duration, season} = req.body;
     try {
-        res.status(201).json({message: 'successful'})
-        
+        await createActivities(name, difficulty, duration, season, country)
+        res.status(201).json({message: 'Activity created'})        
     } catch (error) {
         res.status(400).json({error: error.message})
     }
 })
 
-router.get('/activities', (req, res) => {
+router.get('/activities', async (req, res) => {
     try {
-        res.status(200).json({message: 'successful'})
-        
+        const result = await getActivities();
+        res.status(200).json(result)        
     } catch (error) {
-        res.status(400).json({error: error.message})
+        res.status(404).json({error: error.message})
     }
 })
 

@@ -15,12 +15,14 @@ function activityModel(database) {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        len: [1, 5]
+        min: 1,
+        max: 5
       }
     },
     duration: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 1,
     },
     season: {
       type: DataTypes.ENUM('Summer', 'Fall', 'Winter', 'Spring'),
