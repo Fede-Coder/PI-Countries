@@ -6,11 +6,14 @@ async function createActivities(name, difficulty, duration, season, country) {
     if(!season) throw new Error('season required')
     if(!country) throw new Error('country required')
 
-    console.log(name, difficulty, duration, season, country);
+    if(!Array.isArray(country)) throw new Error('country must be an array')
+    if(country.length < 1) throw new Error('mush contain at least 1 country')
 
-    const searchCountry = await Country.findOne({where: {name: country}})
+    if(await Activity.findOne()) throw new Error('')
+
+    const countries = await Country.findAll({where: {name: country}})
     const activity = await Activity.create({name, difficulty, duration, season})
-    await searchCountry.addActivity(activity)
+    await activity.addCountry(countries)
 }
 
 module.exports = { createActivities }
