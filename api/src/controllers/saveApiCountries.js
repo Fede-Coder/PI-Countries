@@ -15,21 +15,10 @@ async function saveApiCountries(Country) {
                 population: country.population,
             }
         })
-        await Country.bulkCreate(allCountries)
+        await Country.bulkCreate(allCountries, {ignoreDuplicates: true})
     } catch (error) {
         throw new Error(error)
     }
 }
 
 module.exports = { saveApiCountries }
-/*
-//db -> api receive -> type date from api
-id -> cca3 -> String
-name -> name.common -> Object
-image -> flags[0] -> Array
-continent -> region -> String 
-capital -> capital -> Array
-subregion -> subregion -> String
-area -> area -> Number
-population -> population -> Number
-*/
