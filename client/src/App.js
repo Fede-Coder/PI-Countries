@@ -8,7 +8,7 @@ import Footer from './components/Footer/Footer'
 //Views
 import NotFound from './views/NotFound/NotFound'
 import Landing from './views/Landing/Landing'
-import Home from './views/Home/Home'
+import Home from './views/Home/Cards'
 import Detail from './views/Detail/Detail'
 import Activity from './views/Activity/Activity'
 

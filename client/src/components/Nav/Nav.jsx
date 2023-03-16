@@ -1,10 +1,15 @@
-import { NavALink, NavMain } from './StyledNav';
+import { Wrapper } from '../../assets/css/styledGlobal';
+import { NavALink, NavMain, NavMenu } from './StyledNav';
 
 export default function Nav() {
     return(
         <NavMain>
-            <NavALink to={'/home'}>Home</NavALink>
-            <NavALink to={'/activity'}>Activity</NavALink>
+            <Wrapper>                
+                <NavMenu>
+                    <NavALink to={'/home'}>Home</NavALink>
+                    <NavALink to={'/activity'}>Activity</NavALink>
+                </NavMenu>
+            </Wrapper>
         </NavMain>
     )
 }
