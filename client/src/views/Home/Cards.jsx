@@ -2,18 +2,18 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { CardsBar, CardsBarDiv, CardsButtonPage, CardsDiv, CardsInput, CardsMain, CardsPagination, CardsSelect } from './StyledCards';
 import { Wrapper } from '../../assets/css/styledGlobal';
-import { filterCountriesByContinent, getAllCountries, getCountriesPerPage, orderCountriesByName, orderCountriesByPopulation, searchCountries } from '../../redux/actions/CountryAction';
+import { filterCountriesByActivity, filterCountriesByContinent, getAllActivities, getAllCountries, getCountriesPerPage, orderCountriesByName, orderCountriesByPopulation, searchCountries } from '../../redux/actions/CountryAction';
 import Card from './Card';
 
 export function Cards(props) {
     //Destructuring props
-    const { getAllCountries, getCountriesPerPage, searchCountries, filterCountriesByContinent, orderCountriesByName, orderCountriesByPopulation, allCountries, countries } = props;
+    const { getAllCountries, getAllActivities, getCountriesPerPage, searchCountries, filterCountriesByContinent, filterCountriesByActivity, orderCountriesByName, orderCountriesByPopulation, allCountries, countries, activities } = props;
 
     //State for buttons page
     const [isActive, setIsActive] = React.useState(-1);
 
     //State of options
-    const options = {
+    let options = {
         continent: [
             {value: '', text: 'Continent'},
             {value: 'All', text: 'All'},
@@ -23,6 +23,9 @@ export function Cards(props) {
             {value: 'Asia', text: 'Asia'},
             {value: 'Oceania', text: 'Oceania'},
             {value: 'Antarctic', text: 'Antarctic'},
+        ],
+        activity: [
+            {value: '', text: 'Activity'}
         ],
         countries: [
             {value: '', text: 'Countries'},
@@ -35,8 +38,10 @@ export function Cards(props) {
             {value: 'Descending', text: 'Descending'},
         ]
     }
+
     const [selected, setSelected] = React.useState({
         continent: options.continent[0].value,
+        activity: options.activity[0].value,
         countries: options.countries[0].value,
         population: options.population[0].value
     })
@@ -46,17 +51,27 @@ export function Cards(props) {
         setSelected({
             ...selected,
             continent: event.target.value,
+            activity: '',
             countries: '',
             population: ''
         })
-        if(event.target.value === 'All') {
-            getAllCountries(pageLimit)
-            setIsActive(0)
-        }
-        else {
-            filterCountriesByContinent(event.target.value, pageLimit)
-            setIsActive(0)
-        }
+
+        if(event.target.value === 'All') getAllCountries(pageLimit)
+        else filterCountriesByContinent(event.target.value, pageLimit)
+
+        setIsActive(0)
+    }
+
+    const handleOnChangeFilterActivity = (event) => {
+        setSelected({
+            ...selected,
+            activity: event.target.value,
+            continent: '',
+            countries: '',
+            population: ''
+        })
+        filterCountriesByActivity(event.target.value, pageLimit)
+        setIsActive(0)
     }
 
     const handleOnChangeOrderCountriesByName = (event) => {
@@ -85,8 +100,9 @@ export function Cards(props) {
 
     React.useEffect(() => {
         getAllCountries(pageLimit)
+        getAllActivities()
         setIsActive(0)
-    }, [getAllCountries, pageLimit]);
+    }, [getAllCountries, getAllActivities, pageLimit]);
 
     //Get array with range
     const range = (from, to, step = 1) => {
@@ -112,10 +128,16 @@ export function Cards(props) {
         )
     }
 
-
     const handleOnChange = (event) => {
         searchCountries(event.target.value, pageLimit)
         setIsActive(0)
+        setSelected({
+            ...selected,
+            activity: '',
+            continent: '',
+            countries: '',
+            population: ''
+        })
     }
 
     return(
@@ -133,13 +155,13 @@ export function Cards(props) {
                                 <option key={option.value} value={option.value} disabled={option.value === ''}>{option.text}</option>
                             ))}
                         </CardsSelect>
-                        <CardsSelect>
-                            <option value={'Activity'} disabled>Activity</option>
-                            <option value={'None'}>None</option>
-                            <option value={'None'}>None</option>
-                            <option value={'None'}>None</option>
-                            <option value={'None'}>None</option>
-                            <option value={'None'}>None</option>
+                        <CardsSelect value={selected.activity} onChange={handleOnChangeFilterActivity}>
+                            {options.activity.map(option => (
+                                <option key={option.value} value={option.value} disabled={option.value === ''}>{option.text}</option>
+                            ))}
+                            {activities && activities.map(option => (
+                                <option key={option.name} value={option.name}>{option.name}</option>
+                            ))}
                         </CardsSelect>
                     </CardsBarDiv>                    
                     <CardsBarDiv>
@@ -159,7 +181,8 @@ export function Cards(props) {
                 {
                     <CardsPagination>
                     {
-                        allCountries.length > 0 ?
+                        allCountries.length > 0
+                        ?
                         ButtonPagination(allCountries)
                         :
                         ''
@@ -186,18 +209,21 @@ export function Cards(props) {
 export function mapStateToProps(state) {
     return {
         allCountries: state.country.allCountries,
-        countries: state.country.countries
+        countries: state.country.countries,
+        activities: state.country.activities,
     }
 }
 
 export function mapDispatchToProps(dispatch) {
     return {
         getAllCountries: (pageLimit) => dispatch(getAllCountries(pageLimit)),
+        getAllActivities: () => dispatch(getAllActivities()),
         getCountriesPerPage: (start, end) => dispatch(getCountriesPerPage(start, end)),
         searchCountries: (name, pageLimit) => dispatch(searchCountries(name, pageLimit)),
         filterCountriesByContinent: (continent, pageLimit) => dispatch(filterCountriesByContinent(continent, pageLimit)),
+        filterCountriesByActivity: (activity, pageLimit) => dispatch(filterCountriesByActivity(activity, pageLimit)),
         orderCountriesByName: (name, pageLimit) => dispatch(orderCountriesByName(name, pageLimit)),
-        orderCountriesByPopulation: (population, pageLimit) => dispatch(orderCountriesByPopulation(population, pageLimit))
+        orderCountriesByPopulation: (population, pageLimit) => dispatch(orderCountriesByPopulation(population, pageLimit)),        
     }
 }
 

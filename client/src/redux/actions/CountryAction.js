@@ -1,11 +1,18 @@
 import axios from 'axios'
-import { ERROR_SEARCH_COUNTRIES, FILTER_COUNTRIES_BY_CONTINENT, GET_ALL_COUNTRIES, GET_COUNTRIES_PER_PAGE, ORDER_COUNTRIES_BY_NAME, ORDER_COUNTRIES_BY_POPULATION, SEARCH_COUNTRIES } from './types'
+import { CLEAR_COUNTRY_DETAIL, ERROR_SEARCH_COUNTRIES, FILTER_COUNTRIES_BY_ACTIVITY, FILTER_COUNTRIES_BY_CONTINENT, GET_ALL_ACTIVITIES, GET_ALL_COUNTRIES, GET_COUNTRIES_PER_PAGE, GET_COUNTRY_DETAIL, ORDER_COUNTRIES_BY_NAME, ORDER_COUNTRIES_BY_POPULATION, SEARCH_COUNTRIES } from './types'
 const URL = 'http://localhost:3001'
 
 const getAllCountries = (pageLimit) => {
     return async function(dispatch) {
         let res = await axios.get(`${URL}/countries`)
         dispatch({type: GET_ALL_COUNTRIES, payload: {res: res.data, pageLimit}})
+    }
+}
+
+const getAllActivities = () => {
+    return async function(dispatch) {
+        let res = await axios.get(`${URL}/activities`)
+        dispatch({type: GET_ALL_ACTIVITIES, payload: res.data})
     }
 }
 
@@ -34,7 +41,13 @@ const filterCountriesByContinent = (continent, pageLimit) => {
     }
 }
 
-//ORDER_COUNTRIES_BY_NAME
+const filterCountriesByActivity = (activity, pageLimit) => {
+    return async function(dispatch) {
+        let res = await axios.get(`${URL}/countries`)
+        dispatch({type: FILTER_COUNTRIES_BY_ACTIVITY, payload: {res: res.data, activity, pageLimit}})
+    }
+}
+
 const orderCountriesByName = (name, pageLimit) => {
     return {
         type: ORDER_COUNTRIES_BY_NAME,
@@ -42,7 +55,6 @@ const orderCountriesByName = (name, pageLimit) => {
     }
 }
 
-//ORDER_COUNTRIES_BY_POPULATION
 const orderCountriesByPopulation = (population, pageLimit) => {
     return {
         type: ORDER_COUNTRIES_BY_POPULATION,
@@ -50,11 +62,32 @@ const orderCountriesByPopulation = (population, pageLimit) => {
     }
 }
 
+const getCountryDetail = (id) => {
+    return async function(dispatch) {
+        try {
+            let res = await axios.get(`${URL}/countries/${id}`)
+            dispatch({type: GET_COUNTRY_DETAIL, payload: res.data})
+        } catch (error) {
+            
+        }
+    }
+}
+
+const clearCountryDetail = () => {
+    return {
+        type: CLEAR_COUNTRY_DETAIL
+    }
+}
+
 export {
     getAllCountries,
+    getAllActivities,
     getCountriesPerPage,
     searchCountries,
     filterCountriesByContinent,
+    filterCountriesByActivity,
     orderCountriesByName,
     orderCountriesByPopulation,
+    getCountryDetail,
+    clearCountryDetail
 }

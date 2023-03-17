@@ -1,19 +1,27 @@
-import { ERROR_SEARCH_COUNTRIES, FILTER_COUNTRIES_BY_CONTINENT, GET_ALL_COUNTRIES, GET_COUNTRIES_PER_PAGE, ORDER_COUNTRIES_BY_NAME, ORDER_COUNTRIES_BY_POPULATION, SEARCH_COUNTRIES } from "../actions/types"
+import { CLEAR_COUNTRY_DETAIL, ERROR_SEARCH_COUNTRIES, FILTER_COUNTRIES_BY_ACTIVITY, FILTER_COUNTRIES_BY_CONTINENT, GET_ALL_ACTIVITIES, GET_ALL_COUNTRIES, GET_COUNTRIES_PER_PAGE, GET_COUNTRY_DETAIL, ORDER_COUNTRIES_BY_NAME, ORDER_COUNTRIES_BY_POPULATION, SEARCH_COUNTRIES } from "../actions/types"
 
 const initialState = {
     countries: [],
     allCountries: [],
-    countryDetail: {}
+    countryDetail: {},
+    activities: [],
 }
 
 const CountryReducer = (state = initialState, action) => {
     switch(action.type) {
-        case GET_ALL_COUNTRIES:
+        case GET_ALL_COUNTRIES: {
             return {
                 ...state,
                 countries: action.payload.res.slice(0, action.payload.pageLimit),
                 allCountries: action.payload.res,
             }
+        }            
+        case GET_ALL_ACTIVITIES: {
+            return {
+                ...state,
+                activities: action.payload
+            }
+        }            
         case GET_COUNTRIES_PER_PAGE: {
             return {
                 ...state,
@@ -29,6 +37,14 @@ const CountryReducer = (state = initialState, action) => {
         }
         case FILTER_COUNTRIES_BY_CONTINENT: {
             const filter = action.payload.res.filter(country => country.continent === action.payload.continent)
+            return {
+                ...state,
+                allCountries: filter,
+                countries: filter.slice(0, action.payload.pageLimit)
+            }
+        }
+        case FILTER_COUNTRIES_BY_ACTIVITY: {
+            const filter = action.payload.res.filter(country => country.activities.some(act => act.name === action.payload.activity))
             return {
                 ...state,
                 allCountries: filter,
@@ -51,6 +67,18 @@ const CountryReducer = (state = initialState, action) => {
                 countries: order.slice(0, action.payload.pageLimit)
             }
         }
+        case GET_COUNTRY_DETAIL: {
+            return {
+                ...state,
+                countryDetail: action.payload
+            }
+        }
+        case CLEAR_COUNTRY_DETAIL: {
+            return {
+                ...state,
+                countryDetail: {}
+            }
+        }
         case ERROR_SEARCH_COUNTRIES: {
             return {
                 ...state,
@@ -58,10 +86,11 @@ const CountryReducer = (state = initialState, action) => {
                 allCountries: [],
             }
         }
-        default:
+        default: {
             return {
                 ...state
             }
+        }
     }
 }
 
