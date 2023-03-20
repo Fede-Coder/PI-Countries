@@ -53,14 +53,7 @@ export function Detail(props) {
         </DetailMain>
     )
 }
-// ID (Código de tres letras).
-// Nombre.
-// Imagen de la bandera.
-// Continente.
-// Capital.
-// Subregión (si tiene).
-// Área (si tiene).
-// Población.
+
 export function mapStateToProps(state) {
     return {
         countryDetail: state.country.countryDetail

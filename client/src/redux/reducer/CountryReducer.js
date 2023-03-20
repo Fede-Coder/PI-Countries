@@ -1,11 +1,13 @@
-import { CLEAR_COUNTRY_DETAIL, ERROR_SEARCH_COUNTRIES, FILTER_COUNTRIES_BY_ACTIVITY, FILTER_COUNTRIES_BY_CONTINENT, GET_ALL_ACTIVITIES, GET_ALL_COUNTRIES, GET_COUNTRIES_PER_PAGE, GET_COUNTRY_DETAIL, IS_FETCHING, ORDER_COUNTRIES_BY_NAME, ORDER_COUNTRIES_BY_POPULATION, SEARCH_COUNTRIES } from "../actions/types"
+import { CLEAR_COUNTRY_DETAIL, ERROR_SEARCH_COUNTRIES, GET_ALL_ACTIVITIES, GET_ALL_COUNTRIES, GET_COUNTRY_DETAIL, IS_FETCHING, SEARCH_COUNTRIES, SET_CURRENT_PAGE, SORT_COUNTRIES } from "../actions/types"
 
 const initialState = {
     isFetching: false,
     countries: [],
-    allCountries: [],
-    countryDetail: {},
     activities: [],
+    currentPage: 1,
+    search: '',
+    countryDetail: {},
+    sortCurrent: 'A-Z'
 }
 
 const CountryReducer = (state = initialState, action) => {
@@ -16,11 +18,16 @@ const CountryReducer = (state = initialState, action) => {
                 isFetching: true
             }
         }
+        case SET_CURRENT_PAGE: {
+            return {
+                ...state,
+                currentPage: action.payload
+            }
+        }
         case GET_ALL_COUNTRIES: {
             return {
                 ...state,
-                countries: action.payload.res.slice(0, action.payload.pageLimit),
-                allCountries: action.payload.res,
+                countries: action.payload
             }
         }            
         case GET_ALL_ACTIVITIES: {
@@ -28,52 +35,54 @@ const CountryReducer = (state = initialState, action) => {
                 ...state,
                 activities: action.payload
             }
-        }            
-        case GET_COUNTRIES_PER_PAGE: {
-            return {
-                ...state,
-                countries: state.allCountries.slice(action.payload.start, action.payload.end)
-            }
         }
         case SEARCH_COUNTRIES: {
             return {
                 ...state,
-                countries: action.payload.res.slice(0, action.payload.pageLimit),
-                allCountries: action.payload.res
+                countries: action.payload.info,
+                search: action.payload.search
             }
         }
-        case FILTER_COUNTRIES_BY_CONTINENT: {
-            const filter = action.payload.res.filter(country => country.continent === action.payload.continent)
+
+        case SORT_COUNTRIES: {
             return {
-                ...state,
-                allCountries: filter,
-                countries: filter.slice(0, action.payload.pageLimit)
+                ...state
             }
         }
-        case FILTER_COUNTRIES_BY_ACTIVITY: {
-            const filter = action.payload.res.filter(country => country.activities.some(act => act.name === action.payload.activity))
-            return {
-                ...state,
-                allCountries: filter,
-                countries: filter.slice(0, action.payload.pageLimit)
-            }
-        }
-        case ORDER_COUNTRIES_BY_NAME: {
-            const order = action.payload.name === 'Ascending' ? state.allCountries.slice().sort((a,b) => a.name > b.name) : state.allCountries.slice().sort((a,b) => a.name < b.name)
-            return {
-                ...state,
-                allCountries: order,
-                countries: order.slice(0, action.payload.pageLimit)
-            }
-        }
-        case ORDER_COUNTRIES_BY_POPULATION: {
-            const order = action.payload.population === 'Ascending' ? state.allCountries.slice().sort((a,b) => a.population > b.population) : state.allCountries.slice().sort((a,b) => a.population < b.population)
-            return {
-                ...state,
-                allCountries: order,
-                countries: order.slice(0, action.payload.pageLimit)
-            }
-        }
+        //Hasta aqui
+        // case FILTER_COUNTRIES_BY_CONTINENT: {
+        //     const filter = action.payload.res.filter(country => country.continent === action.payload.continent)
+        //     return {
+        //         ...state,
+        //         allCountries: filter,
+        //         countries: filter.slice(0, action.payload.pageLimit)
+        //     }
+        // }
+        // case FILTER_COUNTRIES_BY_ACTIVITY: {
+        //     const filter = action.payload.res.filter(country => country.activities.some(act => act.name === action.payload.activity))
+        //     return {
+        //         ...state,
+        //         allCountries: filter,
+        //         countries: filter.slice(0, action.payload.pageLimit)
+        //     }
+        // }
+        // case ORDER_COUNTRIES_BY_NAME: {
+        //     const order = action.payload.name === 'Ascending' ? state.allCountries.slice().sort((a,b) => a.name > b.name) : state.allCountries.slice().sort((a,b) => a.name < b.name)
+        //     return {
+        //         ...state,
+        //         allCountries: order,
+        //         countries: order.slice(0, action.payload.pageLimit)
+        //     }
+        // }
+        // case ORDER_COUNTRIES_BY_POPULATION: {
+        //     const order = action.payload.population === 'Ascending' ? state.allCountries.slice().sort((a,b) => a.population > b.population) : state.allCountries.slice().sort((a,b) => a.population < b.population)
+        //     return {
+        //         ...state,
+        //         allCountries: order,
+        //         countries: order.slice(0, action.payload.pageLimit)
+        //     }
+        // }
+        //
         case GET_COUNTRY_DETAIL: {
             return {
                 ...state,

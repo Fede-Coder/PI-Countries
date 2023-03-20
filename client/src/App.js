@@ -11,9 +11,19 @@ import Landing from './views/Landing/Landing'
 import Home from './views/Home/Cards'
 import Detail from './views/Detail/Detail'
 import Activity from './views/Activity/Activity'
+import { useDispatch } from 'react-redux'
+import React from 'react'
+import { getAllActivities, getAllCountries } from './redux/actions/CountryAction'
 
 
 function App() {
+    const dispatch = useDispatch()
+
+    React.useEffect(() => {
+        dispatch(getAllCountries())
+        dispatch(getAllActivities())
+    }, [dispatch])
+
     return (
         <>
             <Header />
@@ -27,7 +37,7 @@ function App() {
             </Routes>
             <Footer />
         </>
-    );
+    )
 }
 
 export default App;

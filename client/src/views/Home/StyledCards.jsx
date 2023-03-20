@@ -97,6 +97,15 @@ const CardsSelect = styled.select`
     &:focus {
         outline: 2px solid #1565c0;
     }
+    margin: 0;
+    
+    &:nth-last-child(2) {
+        border-radius: 15px 0 0 15px;
+    }
+    &:last-child {
+        border-radius: 0 15px 15px 0;
+        margin-left:2px
+    }
 `
 
 const CardsPagination = styled.div`
