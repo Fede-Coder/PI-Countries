@@ -1,6 +1,7 @@
-import { CLEAR_COUNTRY_DETAIL, ERROR_SEARCH_COUNTRIES, FILTER_COUNTRIES_BY_ACTIVITY, FILTER_COUNTRIES_BY_CONTINENT, GET_ALL_ACTIVITIES, GET_ALL_COUNTRIES, GET_COUNTRIES_PER_PAGE, GET_COUNTRY_DETAIL, ORDER_COUNTRIES_BY_NAME, ORDER_COUNTRIES_BY_POPULATION, SEARCH_COUNTRIES } from "../actions/types"
+import { CLEAR_COUNTRY_DETAIL, ERROR_SEARCH_COUNTRIES, FILTER_COUNTRIES_BY_ACTIVITY, FILTER_COUNTRIES_BY_CONTINENT, GET_ALL_ACTIVITIES, GET_ALL_COUNTRIES, GET_COUNTRIES_PER_PAGE, GET_COUNTRY_DETAIL, IS_FETCHING, ORDER_COUNTRIES_BY_NAME, ORDER_COUNTRIES_BY_POPULATION, SEARCH_COUNTRIES } from "../actions/types"
 
 const initialState = {
+    isFetching: false,
     countries: [],
     allCountries: [],
     countryDetail: {},
@@ -9,6 +10,12 @@ const initialState = {
 
 const CountryReducer = (state = initialState, action) => {
     switch(action.type) {
+        case IS_FETCHING: {
+            return {
+                ...state,
+                isFetching: true
+            }
+        }
         case GET_ALL_COUNTRIES: {
             return {
                 ...state,
