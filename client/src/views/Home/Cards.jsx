@@ -3,7 +3,7 @@ import { CardsBar, CardsBarDiv, CardsButtonPage, CardsDiv, CardsInput, CardsMain
 import { Wrapper } from '../../assets/css/styledGlobal';
 import Card from './Card';
 import { useDispatch, useSelector } from 'react-redux';
-import { searchCountries, setCurrentPage } from '../../redux/actions/CountryAction';
+import { searchCountries, setCurrentPage, setFilterCountries, setSearch, setSortCountries } from '../../redux/actions/CountryAction';
 
 export default function Cards() {
     
@@ -12,13 +12,33 @@ export default function Cards() {
     const dispatch = useDispatch();
     const selector = useSelector(state => state.country);
 
+    const handleOnClickPage = (numberPage) => {
+        dispatch(setCurrentPage(numberPage))
+    }
+
     const handleSearchByName = (event) => {
         dispatch(searchCountries(event.target.value))
         dispatch(setCurrentPage(1))
     }
 
-    const handleOnClickPage = (numberPage) => {
-        dispatch(setCurrentPage(numberPage))
+    const handleFilterBy = (event) => {
+        dispatch(setFilterCountries(event.target.value, undefined))
+        dispatch(setCurrentPage(1))
+        dispatch(setSearch(''))
+    }
+
+    const handleFilterOf = (event) => {        
+        dispatch(setFilterCountries(undefined, event.target.value))
+        dispatch(setCurrentPage(1))
+        dispatch(setSearch(''))
+    }
+
+    const handleSortBy = (event) => {
+        dispatch(setSortCountries(event.target.value, undefined))
+    }
+
+    const handleSortOf = (event) => {
+        dispatch(setSortCountries(undefined, event.target.value))
     }
 
     return(
@@ -31,41 +51,40 @@ export default function Cards() {
                     </CardsBarDiv>
                     <CardsBarDiv>
                         <span>Filter by continent or type of activity</span>
-                        <CardsSelect>
-                            <option value={''} disabled>Continent</option>
-                            <option value={'All'}>All</option>
-                            <option value={'Americas'}>Americas</option>
-                            <option value={'Europe'}>Europe</option>
-                            <option value={'Africa'}>Africa</option>
-                            <option value={'Asia'}>Asia</option>
-                            <option value={'Oceania'}>Oceania</option>
-                            <option value={'Antarctic'}>Antarctic</option>
+                        <CardsSelect value={selector.filterBy} onChange={handleFilterBy}>
+                            <option value={''} disabled>Filter by...</option>
+                            <option value={'Continent'}>Continent</option>
+                            <option value={'Activity'}>Activity</option>
                         </CardsSelect>
-                        <CardsSelect>
-                            <option value={''} disabled>Activities</option>
-                            { selector.activities && selector.activities.map(option =>
-                                <option key={option.name} value={option.name}>{option.name}</option>
-                            )}
+                        <CardsSelect value={selector.filterOf} onChange={handleFilterOf}>
+                            <option value={''} disabled>Of...</option>
+                            {
+                                (selector.filterBy === 'Continent' && selector.continents.map(option =>
+                                    <option key={option} value={option} >{option}</option>
+                                ))
+                                ||
+                                (selector.filterBy === 'Activity' && selector.activities.map(option =>
+                                    <option key={option.name} value={option.name} >{option.name}</option>
+                                ))
+                            }
                         </CardsSelect>
                     </CardsBarDiv>
                     <CardsBarDiv>
-                        <span>Sort by countries or population</span>
-                        <CardsSelect>
+                        <span>Sort by name country or population</span>
+                        <CardsSelect value={selector.sortBy} onChange={handleSortBy}>
                             <option value={''} disabled>Sort by...</option>
-                            <option value={'Countries'}>Countries</option>
+                            <option value={'Country'}>Country</option>
                             <option value={'Population'}>Population</option>
                         </CardsSelect>
-                        <CardsSelect >
-                            <option value={''} disabled>In shape...</option>
+                        <CardsSelect value={selector.sortOf} onChange={handleSortOf}>
+                            <option value={''} disabled>Of...</option>
                             <option value={'Ascending'}>Ascending</option>
                             <option value={'Descending'}>Descending</option>
                         </CardsSelect>
                     </CardsBarDiv>
                 </CardsBar>
                 <CardsPagination>
-                    {
-                        selector.countries && <Pagination countries={selector.countries} qtyPerPage={qtyPerPage} handleOnClickPage={handleOnClickPage} />
-                    }
+                    <Pagination countries={selector.countries} qtyPerPage={qtyPerPage} currentPage={selector.currentPage} handleOnClickPage={handleOnClickPage} />
                 </CardsPagination>
             </Wrapper>
             <Wrapper>
@@ -93,7 +112,7 @@ export function Pagination(props) {
     return(<>
         {
             range(1, totalPage).map((numberPage, index) => 
-                <CardsButtonPage key={index} onClick={() => props.handleOnClickPage(numberPage)}>{numberPage}</CardsButtonPage>
+                <CardsButtonPage key={index} onClick={() => props.handleOnClickPage(numberPage)} className={props.currentPage-1 === index ? 'active' : null}>{numberPage}</CardsButtonPage>
             )
         }
     </>)

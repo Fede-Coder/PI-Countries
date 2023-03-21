@@ -99,6 +99,10 @@ const ActivitySelectCountry = styled.div`
             background-color: #242424;
         }
     }
+
+    & > div {
+        
+    }
 `
 
 const ActivityButton = styled.button`

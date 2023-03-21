@@ -126,7 +126,12 @@ const CardsButtonPage = styled.button`
     cursor: pointer;
     transition: 0.1s all linear;
     &.active {
-        background-color: #c5c5c5;
+        background-color: #1565c0;
+        color: white;
+        transform: scale(1.1);
+    }
+    &:hover {
+        transform: scale(1.1);
     }
 `
 
