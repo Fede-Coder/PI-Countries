@@ -62,20 +62,6 @@ const setSortCountries = (sortBy = undefined, sortOf = undefined) => {
     }
 }
 
-// const filterCountriesByContinent = (continent, pageLimit) => {
-//     return async function(dispatch) {
-//         let res = await axios.get(`${URL}/countries`)
-//         dispatch({type: FILTER_COUNTRIES_BY_CONTINENT, payload: {res: res.data, continent, pageLimit}})
-//     }
-// }
-
-// const filterCountriesByActivity = (activity, pageLimit) => {
-//     return async function(dispatch) {
-//         let res = await axios.get(`${URL}/countries`)
-//         dispatch({type: FILTER_COUNTRIES_BY_ACTIVITY, payload: {res: res.data, activity, pageLimit}})
-//     }
-// }
-
 const getCountryDetail = (id) => {
     return async function(dispatch) {
         try {

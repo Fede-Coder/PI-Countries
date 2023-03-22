@@ -3,7 +3,7 @@ import { CLEAR_COUNTRY_DETAIL, ERROR_SEARCH_COUNTRIES, FILTER_COUNTRIES, GET_ALL
 const initialState = {
     isFetching: false,
     countries: [],
-    nameCountries: [],
+    allCountries: [],
     activities: [],
     continents: ['All'],
     currentPage: 1,
@@ -39,7 +39,7 @@ const CountryReducer = (state = initialState, action) => {
             return {
                 ...state,
                 countries: action.payload,
-                nameCountries: action.payload.map(country => country.name)
+                allCountries: action.payload.map(country => {return {id: country.id, name: country.name, image: country.image}})
             }
         }            
         case GET_ALL_ACTIVITIES: {
@@ -147,7 +147,7 @@ const CountryReducer = (state = initialState, action) => {
                     ...state,
                     countries: sort
                 }
-            } else {
+            } else if(state.sortBy === 'Population') {
                 //Population
                 const sort = state.sortOf === 'Ascending'
                 ?                
@@ -159,8 +159,12 @@ const CountryReducer = (state = initialState, action) => {
                     ...state,
                     countries: sort
                 }
+            } else {
+                return {
+                    ...state
+                }
             }
-        }
+        }        
         case GET_COUNTRY_DETAIL: {
             return {
                 ...state,

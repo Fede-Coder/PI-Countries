@@ -32,7 +32,7 @@ const ActivityForm = styled.form`
     border-radius: 0 0 10px 10px;
     padding: 10px 10px;
 
-    & > span {
+    & label {
         display: block;
         font-size: 14px;
         border-bottom: 1px solid #1565c0;
@@ -101,7 +101,36 @@ const ActivitySelectCountry = styled.div`
     }
 
     & > div {
-        
+        text-align: center;
+        display: grid;
+        align-items: stretch;
+        grid-template-columns: repeat(5, 1fr);
+        width: 100%;
+        & > button {
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            padding: 10px 0px;
+            background-color: transparent;
+            transition: 0.1s all linear;
+            & > img {
+                max-width: 5vw;
+                max-height: 5vh;
+                vertical-align: middle;
+                border-radius: 3px;
+                filter: drop-shadow(rgb(0, 0, 0) 0px 0px 3px);
+                transition: 0.1s all linear;
+                
+            }
+
+            &:hover {
+                background-color: #fa3c2e47;
+                & > img {                    
+                    transform: scale(1.1);
+                }
+            }
+        }
+        margin-bottom: 10px;
     }
 `
 
@@ -115,6 +144,7 @@ const ActivityButton = styled.button`
     transition: 0.1s all linear;
     color: white;
     width: 100%;
+    margin-top: 10px;
 
     &:hover {
         background-color: #242424;

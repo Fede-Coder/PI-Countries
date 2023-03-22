@@ -3,7 +3,11 @@ import { Wrapper } from '../../assets/css/styledGlobal'
 import { useDispatch, useSelector } from 'react-redux';
 import React from 'react';
 
+//Falta terminar validación!!!!!!!!!!!!!!!!!!
 export default function Activity() {
+
+    const dispatch = useDispatch();
+    const selector = useSelector(state => state.country)
 
     const [input, setInput] = React.useState({
         name: '',
@@ -11,14 +15,14 @@ export default function Activity() {
         duration: 1,
         season: 'Summer',
         country: '',
+        countrySelected: [],
     })
-    const [countrySel, setCountrySel] = React.useState([]);
 
-    const dispatch = useDispatch();
-    const selector = useSelector(state => state.country)
-    
+    const [errors, setErrors] = React.useState({})
+
     const handleOnSubmit = (event) => {
         event.preventDefault();
+        console.log('publicando');
     }
     
     const handleInput = (event) => {
@@ -26,16 +30,28 @@ export default function Activity() {
             ...input,
             [event.target.name]: event.target.value
         })
+        setErrors(validation({
+            ...input,
+            [event.target.name]: event.target.value
+        }))
     }
 
     const handleAddCountry = () => {
-        if(selector.nameCountries.some(country => country === input.country)) {
-            setCountrySel([...countrySel, input.country])
+        const findCountry = selector.allCountries.find(country => country.name === input.country)
+        if(findCountry) {
             setInput({
                 ...input,
-                country: ''
+                country: '',
+                countrySelected: [...input.countrySelected ,findCountry]
             })
         }
+    }
+
+    const handleRemoveCountry = (event) => {
+        setInput({
+            ...input,
+            countrySelected: input.countrySelected.filter(country => country.id !== event.currentTarget.value)
+        })
     }
 
     return(
@@ -44,37 +60,46 @@ export default function Activity() {
                 <ActivityDivLeft>
                     <ActivityTitle>Create activity</ActivityTitle>
                     <ActivityForm onSubmit={handleOnSubmit}>
-                        <span>Name of the activity</span>
-                        <ActivityInputText name={'name'} value={input.name} onChange={handleInput}/>
-                        <span>Difficulty</span>
-                        <ActivityInputRange type={'range'} name={'difficulty'} value={input.difficulty} min={'1'} max={'5'} onChange={handleInput}/>
-                        <span>Duration in hours</span>
-                        <ActivityInputText name={'duration'} value={input.duration} onChange={handleInput} />
-                        <span>Season</span>
+                        <label>Name of the activity</label>
+                        <ActivityInputText type={'text'} name={'name'} value={input.name} onChange={handleInput}/>
+                        <label>Difficulty</label>
+                        <ActivityInputRange type={'range'} name={'difficulty'} value={input.difficulty} min={'0'} max={'5'} onChange={handleInput}/>
+                        <label>Duration in hours</label>
+                        <ActivityInputText type={'number'} name={'duration'} value={input.duration} onChange={handleInput} />
+                        <label>Season</label>
                         <ActivitySelect name={'season'} value={input.season} onChange={handleInput}>
                             <option>Summer</option>
                             <option>Fall</option>
                             <option>Winter</option>
                             <option>Spring</option>
                         </ActivitySelect>
-                        <span>Select country</span>
+                        <label>Select country</label>
                         <ActivitySelectCountry>
-                            <ActivityInputText list={'countries'} name={'country'} value={input.country} onChange={handleInput}/>
-                            <button onClick={handleAddCountry}>+</button>
+                            <ActivityInputText type={'text'} list={'countries'} name={'country'} value={input.country} onChange={handleInput}/>
+                            <button type={'button'} onClick={handleAddCountry}>+</button>
                             <datalist id={'countries'}>
                                 {
-                                    selector.nameCountries && selector.nameCountries.map(country =>
-                                        <option key={country}>{country}</option>
+                                    selector.allCountries && selector.allCountries.map(country =>
+                                        <option key={country.id}>{country.name}</option>
                                     )
                                 }
-                            </datalist>
-                            <div>
-                                {
-                                    countrySel.map(country => country)
-                                }
-                            </div>
+                            </datalist>                            
+                            {
+                                input.countrySelected.length > 0
+                                ?
+                                <>
+                                <label>Click a country to remove it</label>
+                                <div>
+                                    {
+                                        input.countrySelected.length > 0 && input.countrySelected.map((country, index) => <button type={'button'} key={index} value={country.id} onClick={handleRemoveCountry}><img src={country.image} alt={country.name} /></button>)
+                                    }
+                                </div>
+                                </>
+                                :
+                                ''
+                            }
                         </ActivitySelectCountry>
-                        <ActivityButton>Create activity</ActivityButton>
+                        <ActivityButton type={'submit'}>Create activity</ActivityButton>
                     </ActivityForm>
                 </ActivityDivLeft>
                 <ActivityDivRight>
@@ -85,4 +110,11 @@ export default function Activity() {
             </Wrapper>
         </ActivityMain>
     )
+}
+
+export function validation(inputs) {
+    let errors = {}
+
+    return errors;
+
 }
