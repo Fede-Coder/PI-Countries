@@ -38,12 +38,32 @@ const ActivityForm = styled.form`
         border-bottom: 1px solid #1565c0;
         margin-bottom: 5px;
     }
+
+    & span {
+        color: red;
+        font-size: 10px;
+    }
 `
 
 const ActivityDiv = styled.div`
     background-color: white;
     border-radius: 0 0 10px 10px;
     padding: 10px 10px;
+
+    & table {
+        width: 100%;
+        
+    }
+
+    & td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
 `
 
 const ActivityInputText = styled.input`
@@ -58,6 +78,14 @@ const ActivityInputText = styled.input`
     transition: 0.1s all linear;
     margin: 10px 0;
     width: 100%;
+
+    ${props => props.isError
+    ? 
+    `
+    outline: rgb(228, 57, 57) solid 2px;
+    background-color: #ffb4b4;
+    `
+    : ``}
 `
 
 const ActivityInputRange = styled.input`
@@ -163,5 +191,5 @@ export {
     ActivityButton,
     ActivityDivLeft,
     ActivityDivRight,
-    ActivitySelectCountry,
+    ActivitySelectCountry
 }

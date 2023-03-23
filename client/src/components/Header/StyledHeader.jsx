@@ -26,6 +26,7 @@ const HeaderLogo = styled.div`
     padding: 80px 0;
 
     img {
+        max-width: 100%;
         filter: drop-shadow(rgba(0, 0, 0, 0.82) 5px 5px 10px);
     }
 

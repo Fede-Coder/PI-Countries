@@ -62,7 +62,7 @@ const CountryReducer = (state = initialState, action) => {
             }
         }
         case SET_FILTER_COUNTRIES: {
-            if(action.payload.filterBy) {
+            if(action.payload.filterBy && !action.payload.filterOf) {
                 if(action.payload.filterBy === 'Continent') {
                     return {
                         ...state,
@@ -80,10 +80,16 @@ const CountryReducer = (state = initialState, action) => {
                         ...state
                     }
                 }
-            } else if(action.payload.filterOf) {
+            } else if(action.payload.filterOf && !action.payload.filterBy) {
                 return {
                     ...state,
                     filterOf: action.payload.filterOf
+                }
+            } else if(action.payload.filterBy && action.payload.filterOf) {
+                return {
+                    ...state,
+                    filterBy: action.payload.filterBy,
+                    filterOf: action.payload.filterOf,
                 }
             } else {
                 return {
@@ -145,7 +151,7 @@ const CountryReducer = (state = initialState, action) => {
 
                 return {
                     ...state,
-                    countries: sort
+                    countries: [...sort]
                 }
             } else if(state.sortBy === 'Population') {
                 //Population
@@ -157,7 +163,7 @@ const CountryReducer = (state = initialState, action) => {
 
                 return {
                     ...state,
-                    countries: sort
+                    countries: [...sort]
                 }
             } else {
                 return {

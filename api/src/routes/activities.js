@@ -18,7 +18,7 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const result = await getActivities();
-        res.status(200).json(result)        
+        res.status(200).json(result)
     } catch (error) {
         res.status(404).json({error: error.message})
     }
