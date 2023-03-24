@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Wrapper } from '../../assets/css/styledGlobal';
 import { clearCountryDetail, getCountryDetail } from '../../redux/actions/CountryAction';
-import { DetailButton, DetailDiv, DetailImg, DetailInfo, DetailMain, DetailTitle } from './StyledDetail';
+import { DetailActivitiesButton, DetailActivitiesDiv, DetailButton, DetailDiv, DetailImg, DetailInfo, DetailMain, DetailTitle } from './StyledDetail';
 
 export function Detail(props) {
     const { getCountryDetail, clearCountryDetail, countryDetail } = props
@@ -37,13 +37,37 @@ export function Detail(props) {
                             <h1>Information</h1>
                             <ul>
                                 <li><span>Continent:</span> {countryDetail.continent}</li>
-                                <li><span>Capital:</span> {countryDetail.capital}</li>
+                                <li><span>Capital:</span> {countryDetail.capital ? countryDetail.capital : 'None'}</li>
                                 <li><span>Subregion:</span> {countryDetail.subregion}</li>
-                                <li><span>Area:</span> {countryDetail.area.toLocaleString('en-US')}</li>
+                                <li><span>Area:</span> {countryDetail.area.toLocaleString('en-US')} km²</li>
                                 <li><span>Population:</span> {countryDetail.population.toLocaleString('en-US')}</li>
                             </ul>
                         </DetailInfo>
                     </DetailDiv>
+                    {
+                        countryDetail.activities.length > 1 &&
+                        <>
+                            <DetailTitle>Activities list</DetailTitle>
+                            <DetailActivitiesDiv>
+                                <div>
+                                    <h3>Name</h3>
+                                    <h3>Difficulty</h3>
+                                    <h3>Duration</h3>
+                                    <h3>Season</h3>
+                                </div>
+                                {
+                                    countryDetail.activities.map((act, index) =>
+                                        <DetailActivitiesButton key={index}>
+                                            <div>{act.name}</div>
+                                            <div>{act.difficulty}</div>
+                                            <div>{act.duration}</div>
+                                            <div>{act.season}</div>
+                                        </DetailActivitiesButton>
+                                    )
+                                }
+                            </DetailActivitiesDiv>
+                        </>
+                    }
                 </>
                 :
                 ''

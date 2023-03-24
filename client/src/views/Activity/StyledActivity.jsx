@@ -39,7 +39,7 @@ const ActivityForm = styled.form`
         margin-bottom: 5px;
     }
 
-    & span {
+    & > span {
         color: red;
         font-size: 10px;
     }
@@ -61,7 +61,7 @@ const ActivityDiv = styled.div`
         padding: 8px;
     }
 
-    tr:nth-child(even) {
+    & tr:nth-child(even) {
         background-color: #dddddd;
     }
 `

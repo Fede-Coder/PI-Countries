@@ -2,8 +2,9 @@ import { ActivityButton, ActivityDiv, ActivityDivLeft, ActivityDivRight, Activit
 import { Wrapper } from '../../assets/css/styledGlobal'
 import { useDispatch, useSelector } from 'react-redux';
 import React from 'react';
-import { createActivity, getAllActivities, getAllCountries, setFilterCountries, setSearch } from '../../redux/actions/CountryAction';
+import { createActivity, setFilterCountries, setSearch } from '../../redux/actions/CountryAction';
 import {Link} from 'react-router-dom'
+import Loading from '../../components/Loading/Loading'
 
 export default function Activity() {
 
@@ -34,10 +35,7 @@ export default function Activity() {
                 season: input.season,
                 country: input.countrySelected.map(country => country.name)
             }
-            dispatch(createActivity(activity)).then(res => {
-                dispatch(getAllCountries())
-                dispatch(getAllActivities())
-            })
+            dispatch(createActivity(activity))
             
             setInput({
                 name: '',
@@ -58,12 +56,13 @@ export default function Activity() {
     }
 
     const handleAddCountry = () => {
-        const findCountry = selector.allCountries.find(country => country.name === input.country)
-        if(findCountry && !input.countrySelected.some(country => country.name === input.country)) {
+        const findCountryInDb = selector.allCountries.find(country => country.name === input.country)
+        const findCountryInSelected = input.countrySelected.some(country => country.name === input.country)
+        if(findCountryInDb && !findCountryInSelected) {
             setInput({
                 ...input,
                 country: '',
-                countrySelected: [...input.countrySelected ,findCountry]
+                countrySelected: [...input.countrySelected ,findCountryInDb]
             })
         }
     }
@@ -134,7 +133,7 @@ export default function Activity() {
                                 ''
                             }
                         </ActivitySelectCountry>
-                        <ActivityButton type={'submit'}>Create activity</ActivityButton>
+                        <ActivityButton type={'submit'}><Loading isFetching={selector.isFetching} />Create activity</ActivityButton>
                     </ActivityForm>
                 </ActivityDivLeft>
                 <ActivityDivRight>

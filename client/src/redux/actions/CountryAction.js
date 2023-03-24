@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { CLEAR_COUNTRY_DETAIL, CREATE_ACTIVITY, ERROR_CREATE_ACTIVITY, ERROR_SEARCH_COUNTRIES, FILTER_COUNTRIES, GET_ALL_ACTIVITIES, GET_ALL_CONTINENTS, GET_ALL_COUNTRIES, GET_COUNTRY_DETAIL, SEARCH_COUNTRIES, SET_CURRENT_PAGE, SET_FILTER_COUNTRIES, SET_SEARCH, SET_SORT_COUNTRIES, SORT_COUNTRIES } from './types'
+import { CLEAR_COUNTRY_DETAIL, CREATE_ACTIVITY, ERROR_CREATE_ACTIVITY, ERROR_SEARCH_COUNTRIES, FILTER_COUNTRIES, GET_ALL_ACTIVITIES, GET_ALL_CONTINENTS, GET_ALL_COUNTRIES, GET_COUNTRY_DETAIL, IS_FETCHING, SEARCH_COUNTRIES, SET_CURRENT_PAGE, SET_FILTER_COUNTRIES, SET_SEARCH, SET_SORT_COUNTRIES, SORT_COUNTRIES } from './types'
 const URL = 'http://localhost:3001'
 
 const setCurrentPage = (numberPage) => {
@@ -81,12 +81,17 @@ const clearCountryDetail = () => {
 
 const createActivity = (activity) => {
     return async function(dispatch) {
+        dispatch({type: IS_FETCHING})
         try {
             let res = await axios.post(`${URL}/activities`, activity)
             console.log(res);
             dispatch({type: CREATE_ACTIVITY})
+            dispatch(getAllCountries())
+            dispatch(getAllActivities())
+            dispatch({type: IS_FETCHING})
         } catch (error) {
             dispatch({type: ERROR_CREATE_ACTIVITY})
+            dispatch({type: IS_FETCHING})
         }
     }
 }

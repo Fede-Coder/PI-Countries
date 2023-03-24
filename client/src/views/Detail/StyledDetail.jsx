@@ -35,12 +35,15 @@ const DetailTitle = styled.h1`
     background-color: #ffffff;
     padding: 5px 15px;
     border-radius: 10px 10px 0 0;
+    margin-top: 20px;
 `
 
 const DetailImg = styled.div`
     max-width: 30%;
+    display: contents;
     img {
-        width: 100%;
+        max-width: auto;
+        max-height: 25vh;
         filter: drop-shadow(#000000 0px 0px 5px);
     }
 `
@@ -63,6 +66,48 @@ const DetailInfo = styled.div`
     }
 `
 
+const DetailActivitiesDiv = styled.div`
+    background-color: white;
+    border-radius: 0 0 10px 10px;
+    padding: 10px;
+
+    & > div {
+        display: grid;
+        align-items: stretch;
+        grid-template-columns: repeat(4, 1fr);
+        width: 90%;
+        margin: 0 auto;
+        text-align: center;
+        & > h3 {
+            margin: 0;
+        }
+    }
+`
+
+const DetailActivitiesButton = styled.button`
+    display: grid;
+    align-items: stretch;
+    grid-template-columns: repeat(4, 1fr);
+    width: 90%;
+    padding: 15px;
+    margin: 10px auto;
+    transition: 0.1s all linear;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+        transform: scale(1.03);
+        box-shadow: 0 0 3px black;
+        background: linear-gradient(140deg, rgb(21, 101, 192) 25%, white 30% 100%);;
+        color: white;
+        & > div {
+            &:not(:first-child) {
+                color: black;
+            }
+        }
+    }
+`
+
 export {
     DetailMain,
     DetailButton,
@@ -70,4 +115,6 @@ export {
     DetailTitle,
     DetailImg,
     DetailInfo,
+    DetailActivitiesDiv,
+    DetailActivitiesButton,
 }
