@@ -16,7 +16,6 @@ export function Detail(props) {
             clearCountryDetail()
         };
     }, [getCountryDetail, detailId, clearCountryDetail]);
-    console.log(countryDetail);
 
     const handleOnClickBack = () => {
         navigate(-1)

@@ -132,7 +132,7 @@ const ActivitySelectCountry = styled.div`
         text-align: center;
         display: grid;
         align-items: stretch;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         width: 100%;
         & > button {
             border: none;
@@ -148,13 +148,14 @@ const ActivitySelectCountry = styled.div`
                 border-radius: 3px;
                 filter: drop-shadow(rgb(0, 0, 0) 0px 0px 3px);
                 transition: 0.1s all linear;
+                transform: scale(.7);
                 
             }
 
             &:hover {
                 background-color: #fa3c2e47;
                 & > img {                    
-                    transform: scale(1.1);
+                    transform: scale(1.0);
                 }
             }
         }

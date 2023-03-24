@@ -59,7 +59,7 @@ export default function Activity() {
 
     const handleAddCountry = () => {
         const findCountry = selector.allCountries.find(country => country.name === input.country)
-        if(findCountry) {
+        if(findCountry && !input.countrySelected.some(country => country.name === input.country)) {
             setInput({
                 ...input,
                 country: '',
@@ -96,6 +96,7 @@ export default function Activity() {
                         <label>Difficulty</label>
                         <span>{errors.difficulty}</span>
                         <ActivityInputRange type={'range'} name={'difficulty'} value={input.difficulty} min={'0'} max={'5'} onChange={handleInput}/>
+                        {/* {input.difficulty} */}
                         <label>Duration in hours</label>
                         <span>{errors.duration}</span>
                         <ActivityInputText isError={errors.duration} type={'number'} name={'duration'} value={input.duration} min={'1'} max={'72'} onChange={handleInput} />

@@ -54,7 +54,9 @@ export default function Cards() {
                         <CardsSelect value={selector.filterBy} onChange={handleFilterBy}>
                             <option value={''} disabled>Filter by...</option>
                             <option value={'Continent'}>Continent</option>
-                            <option value={'Activity'} disabled={selector.activities.length===0}>Activity</option>
+                            {
+                                selector.activities.length!==0 && <option value={'Activity'}>Activity</option>
+                            }                            
                         </CardsSelect>
                         <CardsSelect value={selector.filterOf} onChange={handleFilterOf}>
                             <option value={''} disabled>Of...</option>

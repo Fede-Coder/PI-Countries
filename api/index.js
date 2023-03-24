@@ -22,7 +22,7 @@ const { saveApiCountries } = require('./src/controllers/saveApiCountries.js');
 const { conn, Country } = require('./src/db.js');
 
 // Syncing all the models at once.
-conn.sync({ force: false }).then(() => {
+conn.sync({ force: true }).then(() => {
   saveApiCountries(Country)
   server.listen(3001, () => {
     console.log('%s listening at 3001'); // eslint-disable-line no-console
