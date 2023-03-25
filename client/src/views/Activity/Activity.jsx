@@ -1,15 +1,21 @@
-import { ActivityButton, ActivityDiv, ActivityDivLeft, ActivityDivRight, ActivityForm, ActivityInputRange, ActivityInputText, ActivityMain, ActivitySelect, ActivitySelectCountry, ActivityTitle } from './StyledActivity';
+import { ActivitiesButton, ActivitiesButtonDiv, ActivityButton, ActivityDiv, ActivityDivLeft, ActivityDivRight, ActivityForm, ActivityInputRange, ActivityInputText, ActivityMain, ActivitySelect, ActivitySelectCountry, ActivityTitle } from './StyledActivity';
 import { Wrapper } from '../../assets/css/styledGlobal'
 import { useDispatch, useSelector } from 'react-redux';
 import React from 'react';
 import { createActivity, setFilterCountries, setSearch } from '../../redux/actions/CountryAction';
-import {Link} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import Loading from '../../components/Loading/Loading'
+
+import Summer from '../../assets/icons/summer.svg';
+import Fall from '../../assets/icons/fall.svg';
+import Winter from '../../assets/icons/winter.svg';
+import Spring from '../../assets/icons/spring.svg';
 
 export default function Activity() {
 
     const dispatch = useDispatch();
     const selector = useSelector(state => state.country)
+    const navigate = useNavigate()
 
     const [input, setInput] = React.useState({
         name: '',
@@ -77,11 +83,32 @@ export default function Activity() {
     const handleOnClickActivity = (name) => {
         dispatch(setFilterCountries('Activity', name))
         dispatch(setSearch(''))
-    } 
+        navigate('/home')
+    }
 
     React.useEffect(() => {
         setErrors(validation({...input}))
     }, [input]);
+
+    const getIconSeason = (name) => {
+        switch(name){
+            case 'Summer': {
+                return <img src={Summer} alt={name}/>;
+            }
+            case 'Fall': {
+                return <img src={Fall} alt={name}/>;
+            }
+            case 'Winter': {
+                return <img src={Winter} alt={name}/>;
+            }
+            case 'Spring': {
+                return <img src={Spring} alt={name}/>;
+            }
+            default: {
+                return '';
+            }
+        }
+    }
 
     return(
         <ActivityMain>
@@ -139,26 +166,22 @@ export default function Activity() {
                 <ActivityDivRight>
                     <ActivityTitle>Activities list</ActivityTitle>
                     <ActivityDiv>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Difficulty</th>
-                                    <th>Duration</th>                                
-                                    <th>Season</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {selector.activities && selector.activities.map((act, index) => 
-                                <tr key={index}>
-                                    <td><Link to='/home' onClick={() => handleOnClickActivity(act.name)}>{act.name}</Link></td>
-                                    <td>{act.difficulty}</td>
-                                    <td>{act.duration}</td>
-                                    <td>{act.season}</td>
-                                </tr>
-                                )}
-                            </tbody>
-                        </table>
+                        <div>
+                            <h3>Name</h3>
+                            <h3>Difficulty</h3>
+                            <h3>Duration</h3>
+                            <h3>Season</h3>
+                        </div>
+                        {
+                            selector.activities && selector.activities.map((act, index) =>
+                                <ActivitiesButton key={index} onClick={() => handleOnClickActivity(act.name)}>
+                                    <ActivitiesButtonDiv>{act.name}</ActivitiesButtonDiv>
+                                    <ActivitiesButtonDiv isBar valueDiff={act.difficulty}><span>{act.difficulty*20}%</span><div></div></ActivitiesButtonDiv>
+                                    <ActivitiesButtonDiv>{act.duration} hrs.</ActivitiesButtonDiv>
+                                    <ActivitiesButtonDiv>{getIconSeason(act.season)}<div>{act.season}</div></ActivitiesButtonDiv>
+                                </ActivitiesButton>
+                            )
+                        }
                     </ActivityDiv>
                 </ActivityDivRight>
             </Wrapper>

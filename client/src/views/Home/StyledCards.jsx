@@ -9,9 +9,39 @@ const CardsDiv = styled.div`
     background-color: white;
     border-radius: 10px;
     padding: 10px;
+    ${props => props.countries !== 0 ?
+    `
     display: grid;
     align-items: stretch;
     grid-template-columns: repeat(5, 1fr);
+    
+    @media (max-width: 900px) {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    @media (max-width: 670px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    @media (max-width: 490px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    @media (max-width: 350px) {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    `
+    :
+    `
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    & > img {
+        max-width: 100px;
+    }
+    & > h1 {
+        text-align: center
+    }
+    `
+    }
+    
 `
 
 const CardsBar = styled.div`
@@ -21,6 +51,8 @@ const CardsBar = styled.div`
     border-radius: 10px;
     display: flex;
     justify-content: space-evenly;
+    flex-flow: row wrap;
+    gap: 2rem;
     padding: 10px 0;
     margin-bottom: 10px;
     border-bottom: 5px solid #b3b3b3;

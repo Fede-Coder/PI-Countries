@@ -6,16 +6,23 @@ const ActivityMain = styled.div`
     & > div {
         display: flex;
         flex-flow: row wrap;
+        gap: 2rem;
         justify-content: space-between;
     }
 `
 
 const ActivityDivLeft = styled.div`
     width: 30%;
+    @media (max-width: 620px) {
+        width: 100%;
+    }
 `
 
 const ActivityDivRight = styled.form`
     width: 65%;
+    @media (max-width: 620px) {
+        width: 100%;
+    }
 `
 
 const ActivityTitle = styled.h1`
@@ -50,20 +57,73 @@ const ActivityDiv = styled.div`
     border-radius: 0 0 10px 10px;
     padding: 10px 10px;
 
-    & table {
-        width: 100%;
+    & > div {
+        display: grid;
+        align-items: stretch;
+        grid-template-columns: repeat(4, 1fr);
+        width: 90%;
+        margin: 0 auto;
+        text-align: center;
+        & > h3 {
+            margin: 0;
+        }
+    }
+`
+
+const ActivitiesButton = styled.button`
+    display: grid;
+    align-items: center;
+    grid-template-columns: repeat(4, minmax(25%, 1fr));
+    width: 90%;
+    padding: 15px;
+    margin: 10px auto;
+    transition: 0.1s all linear;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+
+    & > div > img {
+        width: 30px;
+    }
+
+    &:hover {
+        transform: scale(1.03);
+        box-shadow: 0 0 3px black;
+        background: linear-gradient(140deg, rgb(21, 101, 192) 30%, white 35% 100%);
+        border-radius: 10px;
+        & > div {
+            &:first-child {
+                color: white;
+            }
+        }
+    }
+`
+
+const ActivitiesButtonDiv = styled.div`
+    overflow-wrap: break-word;
+    ${props => props.isBar && `
+    width: 60%;
+    height: 50%;
+    margin: 0 auto;
+    background: #858585;
+    border: 2px solid #414141;
+    border-radius: 15px;
+    position: relative;
+    & > span {
+        color: white;
+        position:absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
         
     }
-
-    & td, th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
+    & > div {        
+        background: ${(props.valueDiff === 5 && '#ff2020') || (props.valueDiff === 4 && '#ff8c20') || (props.valueDiff === 3 && '#ffc400') || (props.valueDiff === 2 && '#1ea81e') || '#2ddb2d'};
+        width: ${props.valueDiff*20}%;
+        border-radius: 15px;
+        height: 100%;
     }
-
-    & tr:nth-child(even) {
-        background-color: #dddddd;
-    }
+    `}
 `
 
 const ActivityInputText = styled.input`
@@ -192,5 +252,7 @@ export {
     ActivityButton,
     ActivityDivLeft,
     ActivityDivRight,
-    ActivitySelectCountry
+    ActivitySelectCountry,
+    ActivitiesButton,
+    ActivitiesButtonDiv
 }

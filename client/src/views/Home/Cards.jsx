@@ -4,6 +4,7 @@ import { Wrapper } from '../../assets/css/styledGlobal';
 import Card from './Card';
 import { useDispatch, useSelector } from 'react-redux';
 import { searchCountries, setCurrentPage, setFilterCountries, setSearch, setSortCountries } from '../../redux/actions/CountryAction';
+import Warning from '../../assets/icons/warning.svg'
 
 export default function Cards() {
     
@@ -85,12 +86,17 @@ export default function Cards() {
                         </CardsSelect>
                     </CardsBarDiv>
                 </CardsBar>
-                <CardsPagination>
-                    <Pagination countries={selector.countries} qtyPerPage={qtyPerPage} currentPage={selector.currentPage} handleOnClickPage={handleOnClickPage} />
-                </CardsPagination>
+                { selector.countries.length > 10 &&
+                    <CardsPagination>
+                        <Pagination countries={selector.countries} qtyPerPage={qtyPerPage} currentPage={selector.currentPage} handleOnClickPage={handleOnClickPage} />
+                    </CardsPagination>
+                }
             </Wrapper>
             <Wrapper>
-                <CardsDiv>
+                <CardsDiv countries={selector.countries.length}>
+                    {
+                        selector.countries.length === 0 && <><h1>There are no countries to show.</h1><img src={Warning} alt='warning' /></>
+                    }
                     <CountriesPerPage countries={selector.countries} currentPage={selector.currentPage} qtyPerPage={qtyPerPage}/>
                 </CardsDiv>
             </Wrapper>
@@ -123,7 +129,7 @@ export function Pagination(props) {
 export function CountriesPerPage(props) {
     const start = props.currentPage*props.qtyPerPage-props.qtyPerPage;
     const end = props.currentPage*props.qtyPerPage;
-    return(<>
+    return(<>        
         {
             props.countries && props.countries.slice(start, end).map((country, index) => 
                 <Card key={index} id={country.id} name={country.name} continent={country.continent} image={country.image} />
