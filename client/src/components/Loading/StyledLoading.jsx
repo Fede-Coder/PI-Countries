@@ -21,6 +21,8 @@ const LoadingSpan = styled.span`
     vertical-align: -.125em;
     text-rendering: optimizeLegibility;
     opacity: 0.7;
+    ${props => props.size ? `font-size: ${props.size};` : ``}
+    
 `
 
 export {

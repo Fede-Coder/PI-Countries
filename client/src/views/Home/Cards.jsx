@@ -5,6 +5,7 @@ import Card from './Card';
 import { useDispatch, useSelector } from 'react-redux';
 import { searchCountries, setCurrentPage, setFilterCountries, setSearch, setSortCountries } from '../../redux/actions/CountryAction';
 import Warning from '../../assets/icons/warning.svg'
+import Loading from '../../components/Loading/Loading'
 
 export default function Cards() {
     
@@ -48,18 +49,18 @@ export default function Cards() {
                 <CardsBar>
                     <CardsBarDiv>
                         <span>Search by country name</span>
-                        <CardsInput placeholder={'Search...'} name={'search'} value={selector.search} onChange={handleSearchByName}/>
+                        <CardsInput placeholder={'Search...'} name={'search'} disabled={selector.isFetching} value={selector.search} onChange={handleSearchByName}/>
                     </CardsBarDiv>
                     <CardsBarDiv>
                         <span>Filter by continent or type of activity</span>
-                        <CardsSelect value={selector.filterBy} onChange={handleFilterBy}>
+                        <CardsSelect value={selector.filterBy} disabled={selector.isFetching} onChange={handleFilterBy}>
                             <option value={''} disabled>Filter by...</option>
                             <option value={'Continent'}>Continent</option>
                             {
                                 selector.activities.length!==0 && <option value={'Activity'}>Activity</option>
                             }                            
                         </CardsSelect>
-                        <CardsSelect value={selector.filterOf} onChange={handleFilterOf}>
+                        <CardsSelect value={selector.filterOf} disabled={selector.isFetching} onChange={handleFilterOf}>
                             <option value={''} disabled>Of...</option>
                             {
                                 (selector.filterBy === 'Continent' && selector.continents.map(option =>
@@ -74,36 +75,45 @@ export default function Cards() {
                     </CardsBarDiv>
                     <CardsBarDiv>
                         <span>Sort by name country or population</span>
-                        <CardsSelect value={selector.sortBy} onChange={handleSortBy}>
+                        <CardsSelect value={selector.sortBy} disabled={selector.isFetching} onChange={handleSortBy}>
                             <option value={''} disabled>Sort by...</option>
                             <option value={'Country'}>Country</option>
                             <option value={'Population'}>Population</option>
                         </CardsSelect>
-                        <CardsSelect value={selector.sortOf} onChange={handleSortOf}>
+                        <CardsSelect value={selector.sortOf} disabled={selector.isFetching} onChange={handleSortOf}>
                             <option value={''} disabled>Of...</option>
                             <option value={'Ascending'}>Ascending</option>
                             <option value={'Descending'}>Descending</option>
                         </CardsSelect>
                     </CardsBarDiv>
                 </CardsBar>
-                { selector.countries.length > 10 &&
+                { selector.countries.length > 10 && !selector.isFetching &&
                     <CardsPagination>
                         <Pagination countries={selector.countries} qtyPerPage={qtyPerPage} currentPage={selector.currentPage} handleOnClickPage={handleOnClickPage} />
                     </CardsPagination>
                 }
             </Wrapper>
             <Wrapper>
-                <CardsDiv countries={selector.countries.length}>
+                <CardsDiv countries={selector.countries.length} isFetching={selector.isFetching}>
                     {
-                        selector.countries.length === 0 && <><h1>There are no countries to show.</h1><img src={Warning} alt='warning' /></>
+                        selector.isFetching && <Loading isFetching={selector.isFetching} size={'100px'} />
                     }
-                    <CountriesPerPage countries={selector.countries} currentPage={selector.currentPage} qtyPerPage={qtyPerPage}/>
+                    {
+                        !selector.isFetching && selector.countries.length === 0 && <><img src={Warning} alt='warning' /><h1>There are no countries to show.</h1></>
+                    }
+                    {
+                        !selector.isFetching && selector.countries.length > 0 && <CountriesPerPage countries={selector.countries} currentPage={selector.currentPage} qtyPerPage={qtyPerPage}/>
+                    }
                 </CardsDiv>
             </Wrapper>
         </CardsMain>
     )
 }
-
+//Quiero hacer paginación de [first_page ... n-2 n-1 n n+1 n+2 ... last_page]
+//3 arreglos y 2 variables
+//1º arreglo: left_pages = [n-m]
+//2º arreglo: pages = [n-2, n-1, n, n+1, n+2]
+//3º arreglo: right_pages = [n+m]
 export function Pagination(props) {
 
     const range = (from, to, step = 1) => {
@@ -117,6 +127,16 @@ export function Pagination(props) {
     }
 
     let totalPage = Math.ceil(props.countries.length / props.qtyPerPage);
+
+    // let numberGenerated = range(1, totalPage)
+
+    // let left_pages = numberGenerated.slice(undefined,props.currentPage-3)
+    // let mid_pages = numberGenerated.slice(props.currentPage-3,props.currentPage+2)
+    // let right_pages = numberGenerated.slice(props.currentPage+2,undefined)
+
+    // console.log("left_pages", left_pages);
+    // console.log("mid_pages", mid_pages);
+    // console.log("right_pages", right_pages);
     return(<>
         {
             range(1, totalPage).map((numberPage, index) => 

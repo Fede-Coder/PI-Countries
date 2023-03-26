@@ -20,7 +20,7 @@ const CountryReducer = (state = initialState, action) => {
         case IS_FETCHING: {
             return {
                 ...state,
-                isFetching: !state.isFetching
+                isFetching: action.payload
             }
         }
         case SET_CURRENT_PAGE: {

@@ -9,7 +9,7 @@ const CardsDiv = styled.div`
     background-color: white;
     border-radius: 10px;
     padding: 10px;
-    ${props => props.countries !== 0 ?
+    ${props => props.countries !== 0 && !props.isFetching ?
     `
     display: grid;
     align-items: stretch;

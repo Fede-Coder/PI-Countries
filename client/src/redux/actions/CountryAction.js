@@ -11,10 +11,14 @@ const setCurrentPage = (numberPage) => {
 
 const getAllCountries = () => {
     return async function(dispatch) {
-        let res = await axios.get(`${URL}/countries`)
-        dispatch({type: GET_ALL_COUNTRIES, payload: res.data})
-        dispatch({type: GET_ALL_CONTINENTS, payload: res.data})
-        dispatch({type: SORT_COUNTRIES })
+        dispatch({type: IS_FETCHING, payload: true})
+        setTimeout(async function() {
+            let res = await axios.get(`${URL}/countries`)
+            dispatch({type: GET_ALL_COUNTRIES, payload: res.data})
+            dispatch({type: GET_ALL_CONTINENTS, payload: res.data})
+            dispatch({type: SORT_COUNTRIES})
+            dispatch({type: IS_FETCHING, payload: false})
+        }, 2000)
     }
 }
 
@@ -48,10 +52,14 @@ const searchCountries = (name) => {
 
 const setFilterCountries = (filterBy = undefined, filterOf = undefined) => {
     return async function(dispatch) {
-        let res = await axios.get(`${URL}/countries`);
+        dispatch({type: IS_FETCHING, payload: true})
         dispatch({type: SET_FILTER_COUNTRIES, payload: {filterBy, filterOf}})
-        dispatch({type: FILTER_COUNTRIES, payload: res.data})
-        dispatch({type: SORT_COUNTRIES })
+        setTimeout(async function() {
+            let res = await axios.get(`${URL}/countries`);
+            dispatch({type: FILTER_COUNTRIES, payload: res.data})
+            dispatch({type: SORT_COUNTRIES })
+            dispatch({type: IS_FETCHING, payload: false})
+        }, 2000)
     }
 }
 
@@ -81,17 +89,17 @@ const clearCountryDetail = () => {
 
 const createActivity = (activity) => {
     return async function(dispatch) {
-        dispatch({type: IS_FETCHING})
+        dispatch({type: IS_FETCHING, payload: true})
         try {
             let res = await axios.post(`${URL}/activities`, activity)
             console.log(res);
             dispatch({type: CREATE_ACTIVITY})
             dispatch(getAllCountries())
             dispatch(getAllActivities())
-            dispatch({type: IS_FETCHING})
+            dispatch({type: IS_FETCHING, payload: false})
         } catch (error) {
             dispatch({type: ERROR_CREATE_ACTIVITY})
-            dispatch({type: IS_FETCHING})
+            dispatch({type: IS_FETCHING, payload: false})
         }
     }
 }

@@ -2,7 +2,7 @@ import { ActivitiesButton, ActivitiesButtonDiv, ActivityButton, ActivityDiv, Act
 import { Wrapper } from '../../assets/css/styledGlobal'
 import { useDispatch, useSelector } from 'react-redux';
 import React from 'react';
-import { createActivity, setFilterCountries, setSearch } from '../../redux/actions/CountryAction';
+import { createActivity, setCurrentPage, setFilterCountries, setSearch } from '../../redux/actions/CountryAction';
 import {useNavigate} from 'react-router-dom'
 import Loading from '../../components/Loading/Loading'
 
@@ -83,6 +83,7 @@ export default function Activity() {
     const handleOnClickActivity = (name) => {
         dispatch(setFilterCountries('Activity', name))
         dispatch(setSearch(''))
+        dispatch(setCurrentPage(1))
         navigate('/home')
     }
 
