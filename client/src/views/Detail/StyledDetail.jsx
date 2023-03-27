@@ -214,7 +214,7 @@ const DetailTitleSkeleton = styled.div`
     background-color: #ffffff;
     padding: 5px 10px;
     border-radius: 10px 10px 0 0;
-    margin-top: 20px;       
+    margin-top: 20px;
 `
 
 const DetailDivSkeleton = styled.div`

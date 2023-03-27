@@ -22,6 +22,7 @@ export default function Cards() {
 
     //Function to set the current page in global state
     const handleOnClickPage = (numberPage) => {
+        if(numberPage === '...') return
         dispatch(setCurrentPage(numberPage))
     }
 
@@ -138,11 +139,7 @@ export default function Cards() {
         </CardsMain>
     )
 }
-//Quiero hacer paginación de [first_page ... n-2 n-1 n n+1 n+2 ... last_page]
-//3 arreglos y 2 variables
-//1º arreglo: left_pages = [n-m]
-//2º arreglo: pages = [n-2, n-1, n, n+1, n+2]
-//3º arreglo: right_pages = [n+m]
+
 export function Pagination(props) {
 
     const genArrayNumbers = (max_number) => {
@@ -157,21 +154,34 @@ export function Pagination(props) {
 
     let totalPage = Math.ceil(props.countries.length / props.qtyPerPage);
 
-    // let numberGenerated = genArrayNumbers(totalPage)
+    let numberGenerated = genArrayNumbers(totalPage)
 
-    // let left_pages = numberGenerated.slice(undefined,props.currentPage-3)
-    // let mid_pages = numberGenerated.slice(props.currentPage-3,props.currentPage+2)
-    // let right_pages = numberGenerated.slice(props.currentPage+2,undefined)
+    //methodPage = 1 - Method 1: simple pagination
+    //methodPage = 2 - Method 2: advanced pagination
+    const methodPage = 2;
 
-    // if(props.currentPage)
-
-    // console.log("left_pages", left_pages);
-    // console.log("mid_pages", mid_pages);
-    // console.log("right_pages", right_pages);
+    let numNeighbors = 2;
+    let arrayPages;
+    if(methodPage === 1) {
+        arrayPages = numberGenerated;
+    } else if (methodPage === 2) {
+        if(totalPage <= 10) {
+            arrayPages = numberGenerated
+        } else {
+            if(numNeighbors+2 >= props.currentPage) {
+                arrayPages = [...numberGenerated.slice(undefined,props.currentPage+numNeighbors), '...', totalPage]
+            } else if(props.currentPage > totalPage-(numNeighbors+2)) {
+                arrayPages = [1, '...', ...numberGenerated.slice(props.currentPage-numNeighbors-1, undefined)]
+            } else {
+                arrayPages = [1,'...',...numberGenerated.slice(props.currentPage-numNeighbors-1,props.currentPage+numNeighbors), '...', totalPage]
+            }
+        }
+    }
+    
     return(<>
         {
-            genArrayNumbers(totalPage).map((numberPage, index) => 
-                <CardsButtonPage key={index} onClick={() => props.handleOnClickPage(numberPage)} className={props.currentPage-1 === index ? 'active' : null}>{numberPage}</CardsButtonPage>
+            arrayPages.map((numberPage, index) => 
+                <CardsButtonPage key={index} onClick={() => props.handleOnClickPage(numberPage)} className={props.currentPage === numberPage ? 'active' : null}>{numberPage}</CardsButtonPage>
             )
         }
     </>)
