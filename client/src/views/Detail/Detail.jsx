@@ -1,9 +1,9 @@
 import React from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Wrapper } from '../../assets/css/styledGlobal';
 import { clearCountryDetail, getCountryDetail, setFilterCountries, setSearch } from '../../redux/actions/CountryAction';
-import { DetailActivitiesButton, DetailActivitiesButtonDiv, DetailActivitiesDiv, DetailButton, DetailContinent, DetailDiv, DetailImg, DetailInfo, DetailMain, DetailTitle } from './StyledDetail';
+import { DetailActivitiesButton, DetailActivitiesButtonDiv, DetailActivitiesDiv, DetailButton, DetailContinent, DetailDiv, DetailDivSkeleton, DetailImg, DetailInfo, DetailMain, DetailTitle, DetailTitleSkeleton, SkeletonSpan } from './StyledDetail';
 
 import Summer from '../../assets/icons/summer.svg';
 import Fall from '../../assets/icons/fall.svg';
@@ -16,19 +16,22 @@ import Africa from '../../assets/icons/continents/africa-min.png'
 import Oceania from '../../assets/icons/continents/oceania-min.png'
 import Asia from '../../assets/icons/continents/asia-min.png'
 import Antarctic from '../../assets/icons/continents/antartida-min.png'
+import NotFound from '../NotFound/NotFound';
 
-export function Detail(props) {
-    const { getCountryDetail, clearCountryDetail, countryDetail } = props
-    const { detailId } = useParams()
-    const navigate = useNavigate()
+export default function Detail() {
+
+    const selector = useSelector((state) => state.country)
     const dispatch = useDispatch()
 
+    const { detailId } = useParams()
+    const navigate = useNavigate()
+
     React.useEffect(() => {
-        getCountryDetail(detailId)
+        dispatch(getCountryDetail(detailId))
         return () => {
-            clearCountryDetail()
+            dispatch(clearCountryDetail())
         };
-    }, [getCountryDetail, detailId, clearCountryDetail]);
+    }, [dispatch, detailId]);
 
     const handleOnClickBack = () => {
         navigate(-1)
@@ -83,73 +86,85 @@ export function Detail(props) {
         <DetailMain>
             <Wrapper>
                 {
-                    Object.keys(countryDetail).length > 0 ? 
-                <>
-                    <DetailButton onClick={handleOnClickBack}>Back</DetailButton>
-                    <DetailTitle>{countryDetail.name} [{countryDetail.id}]</DetailTitle>
-                    <DetailDiv>
-                        <DetailImg>
-                            <img src={countryDetail.image} alt={countryDetail.name} />
-                        </DetailImg>
-                        <DetailInfo>
-                            <h1>Information</h1>
-                            <ul>
-                                <li><span>Continent:</span> {countryDetail.continent}</li>
-                                <li><span>Capital:</span> {countryDetail.capital ? countryDetail.capital : 'None'}</li>
-                                <li><span>Subregion:</span> {countryDetail.subregion ? countryDetail.subregion : 'None'}</li>
-                                <li><span>Area:</span> {countryDetail.area.toLocaleString('en-US')} km²</li>
-                                <li><span>Population:</span> {countryDetail.population.toLocaleString('en-US')}</li>
-                            </ul>
-                        </DetailInfo>
-                        
-                        <DetailContinent>
-                            {getContinent(countryDetail.continent)}
-                        </DetailContinent>
-                    </DetailDiv>
-                    {
-                        countryDetail.activities.length > 0 &&
-                        <>
-                            <DetailTitle>Activities list</DetailTitle>
-                            <DetailActivitiesDiv>
-                                <div>
-                                    <h3>Name</h3>
-                                    <h3>Difficulty</h3>
-                                    <h3>Duration</h3>
-                                    <h3>Season</h3>
-                                </div>
+                    selector.isFetching 
+                    ?
+                    <>
+                        <DetailTitleSkeleton>
+                            <SkeletonSpan></SkeletonSpan>
+                        </DetailTitleSkeleton>
+                        <DetailDivSkeleton>                            
+                            <div className='image'>
+                                <SkeletonSpan width='80%' height='20vh'></SkeletonSpan>
+                            </div>
+                            <div className='info'>
+                                <SkeletonSpan width='30%' height='4vh'></SkeletonSpan>
+                                <SkeletonSpan width='40%' height='2vh'></SkeletonSpan>
+                                <SkeletonSpan width='50%' height='2vh'></SkeletonSpan>
+                                <SkeletonSpan width='20%' height='2vh'></SkeletonSpan>
+                                <SkeletonSpan width='30%' height='2vh'></SkeletonSpan>
+                            </div>
+                        </DetailDivSkeleton>
+                    </>
+                    :
+                    <>
+                        <DetailButton onClick={handleOnClickBack}>Back</DetailButton>
+                        {
+                            Object.keys(selector.countryDetail).length > 0
+                            ? 
+                            <>
+                                <DetailTitle>{selector.countryDetail.name} [{selector.countryDetail.id}]</DetailTitle>
+                                <DetailDiv>
+                                    <DetailImg>
+                                        <img src={selector.countryDetail.image} alt={selector.countryDetail.name} />
+                                    </DetailImg>
+
+                                    <DetailInfo>
+                                        <h1>Information</h1>
+                                        <ul>
+                                            <li><span>Continent:</span> {selector.countryDetail.continent}</li>
+                                            <li><span>Capital:</span> {selector.countryDetail.capital ? selector.countryDetail.capital : 'None'}</li>
+                                            <li><span>Subregion:</span> {selector.countryDetail.subregion ? selector.countryDetail.subregion : 'None'}</li>
+                                            <li><span>Area:</span> {selector.countryDetail.area.toLocaleString('en-US')} km²</li>
+                                            <li><span>Population:</span> {selector.countryDetail.population.toLocaleString('en-US')}</li>
+                                        </ul>
+                                    </DetailInfo>
+                                
+                                    <DetailContinent>
+                                        {getContinent(selector.countryDetail.continent)}
+                                    </DetailContinent>
+                                </DetailDiv>
                                 {
-                                    countryDetail.activities.map((act, index) =>
-                                        <DetailActivitiesButton key={index} onClick={() => handleOnClickActivity(act.name)}>
-                                            <DetailActivitiesButtonDiv>{act.name}</DetailActivitiesButtonDiv>
-                                            <DetailActivitiesButtonDiv isBar valueDiff={act.difficulty}><span>{act.difficulty*20}%</span><div></div></DetailActivitiesButtonDiv>
-                                            <DetailActivitiesButtonDiv>{act.duration} hrs.</DetailActivitiesButtonDiv>
-                                            <DetailActivitiesButtonDiv>{getIconSeason(act.season)}<div>{act.season}</div></DetailActivitiesButtonDiv>
-                                        </DetailActivitiesButton>
-                                    )
+                                    selector.countryDetail.activities.length > 0 &&
+                                    <>
+                                        <DetailTitle>Activities list</DetailTitle>
+                                        <DetailActivitiesDiv>
+                                            <div>
+                                                <h3>Name</h3>
+                                                <h3>Difficulty</h3>
+                                                <h3>Duration</h3>
+                                                <h3>Season</h3>
+                                            </div>
+                                            {
+                                                selector.countryDetail.activities.map((act, index) =>
+                                                    <DetailActivitiesButton key={index} onClick={() => handleOnClickActivity(act.name)}>
+                                                        <DetailActivitiesButtonDiv>{act.name}</DetailActivitiesButtonDiv>
+                                                        <DetailActivitiesButtonDiv isBar valueDiff={act.difficulty}><span>{act.difficulty*20}%</span><div></div></DetailActivitiesButtonDiv>
+                                                        <DetailActivitiesButtonDiv>{act.duration} hrs.</DetailActivitiesButtonDiv>
+                                                        <DetailActivitiesButtonDiv>{getIconSeason(act.season)}<div>{act.season}</div></DetailActivitiesButtonDiv>
+                                                    </DetailActivitiesButton>
+                                                )
+                                            }
+                                        </DetailActivitiesDiv>
+                                    </>
                                 }
-                            </DetailActivitiesDiv>
-                        </>
-                    }
-                </>
-                :
-                ''
+                            </>
+                        :
+                        <NotFound />
+                        }
+                    </>
+                    
                 }
             </Wrapper>
         </DetailMain>
     )
 }
-
-export function mapStateToProps(state) {
-    return {
-        countryDetail: state.country.countryDetail
-    }
-}
-
-export function mapDispatchToProps(dispatch) {
-    return {
-        getCountryDetail: (id) => dispatch(getCountryDetail(id)),
-        clearCountryDetail: () => dispatch(clearCountryDetail())
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Detail)

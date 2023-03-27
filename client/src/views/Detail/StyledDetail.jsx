@@ -1,4 +1,10 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
+
+const shimmer = keyframes`
+    100% {
+        transform: translateX(100%);
+    }
+`
 
 const DetailMain = styled.div`
     min-height: 300px;
@@ -179,6 +185,59 @@ const DetailContinent = styled.div `
     }
 `
 
+const SkeletonSpan = styled.span`    
+    display: inline-block;
+    width: ${props => props.width ? props.width : `30%`};
+    height: ${props => props.height ? props.height : `35px`};
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    background-color: #DDDBDD;
+    &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        transform: translateX(-100%);
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.2) 20%, rgba(255, 255, 255, 0.5) 60%, rgba(255, 255, 255, 0));
+        animation: ${shimmer} 1s infinite ease-out;
+        background-size: 800px 100px;
+    }    
+`
+
+const DetailTitleSkeleton = styled.div`    
+    margin: 0;
+    color: black;
+    border-bottom: 2px solid #1565c0;
+    background-color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 10px 10px 0 0;
+    margin-top: 20px;       
+`
+
+const DetailDivSkeleton = styled.div`
+    position: relative;
+    background-color: white;
+    border-radius: 0 0 10px 10px;
+    padding: 10px 10px;
+    display: flex;
+
+    & > div.image {
+        flex: 1 0 0;
+    }
+
+    & > div.info {
+        flex: 2 1 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border-left: 3px solid #1565c0;
+        padding-left: 20px;
+    }
+`
+
 export {
     DetailMain,
     DetailButton,
@@ -190,4 +249,7 @@ export {
     DetailActivitiesButton,
     DetailActivitiesButtonDiv,
     DetailContinent,
+    SkeletonSpan,
+    DetailTitleSkeleton,
+    DetailDivSkeleton
 }

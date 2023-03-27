@@ -6,11 +6,12 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: url('./assets/img/background2.jpg');
+  background: url('./assets/img/digital-world-map-hologram-blue-background.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
-  backdrop-filter: hue-rotate(40deg) blur(2px);
+  backdrop-filter: hue-rotate(320deg) blur(2px);
+  
 }
 
 * {

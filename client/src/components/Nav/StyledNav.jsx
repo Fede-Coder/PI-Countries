@@ -20,7 +20,14 @@ const NavALink = styled(NavLink)`
     display: inline-block;
     font-size: 30px;
     position: relative;
-    transition: 0.5s all ease-in-out;
+    transition: 0.2s all ease-in-out;
+
+    
+    display: flex;
+    & > img {        
+        margin: 0 10px 0 0;
+        width: 1.2em;
+    }
 
     &.active {
         background-color: rgb(52, 51, 51);

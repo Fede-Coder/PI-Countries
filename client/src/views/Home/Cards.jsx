@@ -1,44 +1,58 @@
 import React from 'react';
-import { CardsBar, CardsBarDiv, CardsButtonPage, CardsDiv, CardsInput, CardsMain, CardsPagination, CardsSelect } from './StyledCards';
-import { Wrapper } from '../../assets/css/styledGlobal';
-import Card from './Card';
 import { useDispatch, useSelector } from 'react-redux';
 import { searchCountries, setCurrentPage, setFilterCountries, setSearch, setSortCountries } from '../../redux/actions/CountryAction';
+
+//Card of country
+import Card from './Card';
+
+//Styles and images
+import { Wrapper } from '../../assets/css/styledGlobal';
+import { CardsBar, CardsBarDiv, CardsButtonPage, CardsDiv, CardsInput, CardsMain, CardsPagination, CardsSelect } from './StyledCards';
 import Warning from '../../assets/icons/warning.svg'
 import Loading from '../../components/Loading/Loading'
 
+//Cards from all countries with search, filters and sort
 export default function Cards() {
     
+    //Page configuration, to set the number of countries per page
     const qtyPerPage = 10;
 
     const dispatch = useDispatch();
     const selector = useSelector(state => state.country);
 
+    //Function to set the current page in global state
     const handleOnClickPage = (numberPage) => {
         dispatch(setCurrentPage(numberPage))
     }
 
+    //Function to set the search typed by the user and set page 1 as current
     const handleSearchByName = (event) => {
         dispatch(searchCountries(event.target.value))
         dispatch(setCurrentPage(1))
     }
 
+    //Function to set the filter by ... without filter of ...
+    //Set page 1 as current and set search empty
     const handleFilterBy = (event) => {
         dispatch(setFilterCountries(event.target.value, undefined))
         dispatch(setCurrentPage(1))
         dispatch(setSearch(''))
     }
 
+    //Function to set the filter of ... without filter by ...
+    //Set page 1 as current and set search empty
     const handleFilterOf = (event) => {        
         dispatch(setFilterCountries(undefined, event.target.value))
         dispatch(setCurrentPage(1))
         dispatch(setSearch(''))
     }
 
+    //Function to set the sort by ... without sort of ...
     const handleSortBy = (event) => {
         dispatch(setSortCountries(event.target.value, undefined))
     }
 
+    //Function to set the sort of ... without sort by ...
     const handleSortOf = (event) => {
         dispatch(setSortCountries(undefined, event.target.value))
     }
@@ -46,6 +60,11 @@ export default function Cards() {
     return(
         <CardsMain>
             <Wrapper>
+                {/* 
+
+                Inside the bar there is search, filter and sort
+
+                */}
                 <CardsBar>
                     <CardsBarDiv>
                         <span>Search by country name</span>
@@ -87,13 +106,23 @@ export default function Cards() {
                         </CardsSelect>
                     </CardsBarDiv>
                 </CardsBar>
-                { selector.countries.length > 10 && !selector.isFetching &&
+                {/* 
+                
+                Pagination bar
+
+                */}
+                { selector.countries.length > qtyPerPage && !selector.isFetching &&
                     <CardsPagination>
                         <Pagination countries={selector.countries} qtyPerPage={qtyPerPage} currentPage={selector.currentPage} handleOnClickPage={handleOnClickPage} />
                     </CardsPagination>
                 }
             </Wrapper>
             <Wrapper>
+                {/* 
+                
+                Countries per page
+
+                */}
                 <CardsDiv countries={selector.countries.length} isFetching={selector.isFetching}>
                     {
                         selector.isFetching && <Loading isFetching={selector.isFetching} size={'100px'} />
@@ -116,30 +145,32 @@ export default function Cards() {
 //3º arreglo: right_pages = [n+m]
 export function Pagination(props) {
 
-    const range = (from, to, step = 1) => {
-        let i = from;
-        const range = []
-        while (i <= to) {
-            range.push(i);
-            i += step;
+    const genArrayNumbers = (max_number) => {
+        let i = 1;
+        const genArrayNumbers = []
+        while (i <= max_number) {
+            genArrayNumbers.push(i)
+            i++;
         }
-        return range;
+        return genArrayNumbers;
     }
 
     let totalPage = Math.ceil(props.countries.length / props.qtyPerPage);
 
-    // let numberGenerated = range(1, totalPage)
+    // let numberGenerated = genArrayNumbers(totalPage)
 
     // let left_pages = numberGenerated.slice(undefined,props.currentPage-3)
     // let mid_pages = numberGenerated.slice(props.currentPage-3,props.currentPage+2)
     // let right_pages = numberGenerated.slice(props.currentPage+2,undefined)
+
+    // if(props.currentPage)
 
     // console.log("left_pages", left_pages);
     // console.log("mid_pages", mid_pages);
     // console.log("right_pages", right_pages);
     return(<>
         {
-            range(1, totalPage).map((numberPage, index) => 
+            genArrayNumbers(totalPage).map((numberPage, index) => 
                 <CardsButtonPage key={index} onClick={() => props.handleOnClickPage(numberPage)} className={props.currentPage-1 === index ? 'active' : null}>{numberPage}</CardsButtonPage>
             )
         }

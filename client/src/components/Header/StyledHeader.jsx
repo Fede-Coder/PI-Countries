@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom'
-import headerImg from '../../assets/img/bg_header.jpg'
+import headerImg from '../../assets/img/23322.jpg'
 
 const HeaderMain = styled.div`
 `
@@ -12,18 +12,31 @@ const HeaderBar = styled.div`
 
 const HeaderLink = styled(Link)`
     color: white;
-    font-size: 40px;
+    font-size: 60px;
     margin: 0 10px 0 0;
+    transition: 0.2s all linear;
+
+    & > img {
+        width: 1em;
+        height: auto;
+        filter: invert(1);
+    }
+
+    &:hover {
+        background-color: rgb(52, 51, 51);
+    }
 `
 
 const HeaderBG = styled.div`
-    background-image: url(${headerImg});
-    background-size: cover;
+    background: url(${headerImg});
+    background-position: center; 
+    background-size: 100%;
 `
 
 const HeaderLogo = styled.div`
     text-align: center;
     padding: 80px 0;
+    backdrop-filter: hue-rotate(320deg) blur(2px) brightness(60%);
 
     img {
         max-width: 100%;

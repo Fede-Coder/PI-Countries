@@ -39,7 +39,7 @@ const CountryReducer = (state = initialState, action) => {
             return {
                 ...state,
                 countries: action.payload,
-                allCountries: action.payload.map(country => {return {id: country.id, name: country.name, image: country.image}})
+                allCountries: action.payload
             }
         }            
         case GET_ALL_ACTIVITIES: {
@@ -58,7 +58,8 @@ const CountryReducer = (state = initialState, action) => {
         case SEARCH_COUNTRIES: {
             return {
                 ...state,
-                countries: action.payload
+                countries: action.payload,
+                allCountries: action.payload
             }
         }
         case SET_FILTER_COUNTRIES: {
@@ -102,17 +103,17 @@ const CountryReducer = (state = initialState, action) => {
                 if(state.filterOf === 'All') {
                     return {
                         ...state,
-                        countries: action.payload,
+                        countries: state.allCountries,
                     }
                 } else {
-                    const filter = action.payload.filter(country => country.continent === state.filterOf)
+                    const filter = state.allCountries.filter(country => country.continent === state.filterOf)
                     return {
                         ...state,
                         countries: filter
                     }
                 }
             } else if(state.filterBy === 'Activity') {
-                const filter = action.payload.filter(country => country.activities.some(act => act.name === state.filterOf))
+                const filter = state.allCountries.filter(country => country.activities.some(act => act.name === state.filterOf))
                 return {
                     ...state,
                     countries: filter
@@ -145,25 +146,25 @@ const CountryReducer = (state = initialState, action) => {
                 //Countries
                 const sort = state.sortOf === 'Ascending'
                 ?                
-                state.countries.sort((a,b) => a.name > b.name) //Ascending
+                state.countries.slice().sort((a,b) => a.name > b.name) //Ascending
                 :
-                state.countries.sort((a,b) => a.name < b.name) //Descending
+                state.countries.slice().sort((a,b) => a.name < b.name) //Descending
 
                 return {
                     ...state,
-                    countries: [...sort]
+                    countries: sort
                 }
             } else if(state.sortBy === 'Population') {
                 //Population
                 const sort = state.sortOf === 'Ascending'
                 ?                
-                state.countries.sort((a,b) => a.population > b.population) //Ascending
+                state.countries.slice().sort((a,b) => a.population > b.population) //Ascending
                 :                
-                state.countries.sort((a,b) => a.population < b.population) //Descending
+                state.countries.slice().sort((a,b) => a.population < b.population) //Descending
 
                 return {
                     ...state,
-                    countries: [...sort]
+                    countries: sort
                 }
             } else {
                 return {
