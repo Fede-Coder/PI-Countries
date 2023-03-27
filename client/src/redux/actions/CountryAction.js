@@ -106,7 +106,7 @@ const createActivity = (activity) => {
             let res = await axios.post(`${URL}/activities`, activity)
             console.log(res);
             dispatch({type: CREATE_ACTIVITY})
-            dispatch(getAllCountries())
+            dispatch(resetCountries())
             dispatch(getAllActivities())
             dispatch({type: IS_FETCHING, payload: false})
         } catch (error) {
@@ -126,5 +126,5 @@ export {
     setSortCountries,
     setFilterCountries,
     setSearch,
-    createActivity
+    createActivity,
 }

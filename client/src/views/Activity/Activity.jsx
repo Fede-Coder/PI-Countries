@@ -31,9 +31,9 @@ export default function Activity() {
     const handleOnSubmit = (event) => {
         event.preventDefault();
         if(Object.keys(errors).length > 0) {
-            alert('no podemos hacer post porque tiene errores')
+            alert('Please complete the necessary fields')
         } else {
-            alert('hecho')
+            alert('Activity created')
             const activity = {
                 name: input.name,
                 difficulty: input.difficulty,

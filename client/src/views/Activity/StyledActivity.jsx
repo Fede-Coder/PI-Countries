@@ -189,27 +189,26 @@ const ActivitySelectCountry = styled.div`
     }
 
     & > div {
-        text-align: center;
-        display: grid;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
         align-items: stretch;
-        grid-template-columns: repeat(4, 1fr);
+        align-content: flex-start;
+        flex-direction: row;
         width: 100%;
         & > button {
             border: none;
             cursor: pointer;
-            width: 100%;
             padding: 10px 0px;
             background-color: transparent;
             transition: 0.1s all linear;
             & > img {
-                max-width: 5vw;
-                max-height: 5vh;
+                width: 80px;
                 vertical-align: middle;
                 border-radius: 3px;
                 filter: drop-shadow(rgb(0, 0, 0) 0px 0px 3px);
                 transition: 0.1s all linear;
                 transform: scale(.7);
-                
             }
 
             &:hover {
