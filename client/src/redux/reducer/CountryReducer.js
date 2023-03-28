@@ -166,6 +166,18 @@ const CountryReducer = (state = initialState, action) => {
                     ...state,
                     countries: sort
                 }
+            } else if(state.sortBy === 'Population density') {
+                //Population density
+                const sort = state.sortOf === 'Ascending'
+                ?                
+                state.countries.slice().sort((a,b) => Math.round(a.population/a.area) > Math.round(b.population/b.area)) //Ascending
+                :                
+                state.countries.slice().sort((a,b) => Math.round(a.population/a.area) < Math.round(b.population/b.area)) //Descending
+
+                return {
+                    ...state,
+                    countries: sort
+                }
             } else {
                 return {
                     ...state

@@ -110,6 +110,7 @@ export default function Cards() {
                             <option value={''} disabled>Sort by...</option>
                             <option value={'Country'}>Country</option>
                             <option value={'Population'}>Population</option>
+                            <option value={'Population density'}>Pop. density</option>
                         </CardsSelect>
                         <CardsSelect value={selector.sortOf} disabled={selector.isFetching} onChange={handleSortOf}>
                             <option value={''} disabled>Of...</option>
