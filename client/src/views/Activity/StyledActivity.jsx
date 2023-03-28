@@ -68,6 +68,19 @@ const ActivityDiv = styled.div`
             margin: 0;
         }
     }
+
+    ${props => !props.activities && `
+        display: flex;
+        align-items:center;
+        justify-content: center;
+        & > img {
+            max-width: 100px;
+        }
+        & > h1 {
+            text-align: center
+        }
+    `}
+    
 `
 
 const ActivitiesButton = styled.button`
@@ -138,6 +151,7 @@ const ActivityInputText = styled.input`
     transition: 0.1s all linear;
     margin: 10px 0;
     width: 100%;
+    ${props => props.disabled && `cursor: not-allowed;`}
 
     ${props => props.isError
     ? 
@@ -151,6 +165,7 @@ const ActivityInputText = styled.input`
 const ActivityInputRange = styled.input`
     margin: 10px 0;
     width: 100%;
+    ${props => props.disabled && `cursor: not-allowed;`}
 `
 
 const ActivitySelect = styled.select`
@@ -163,6 +178,7 @@ const ActivitySelect = styled.select`
     transition: 0.1s all linear;
     width: 100%;
     margin: 10px 0;
+    ${props => props.disabled && `cursor: not-allowed;`}
     option {
         background-color: #e7e7e7;
     }
@@ -182,6 +198,10 @@ const ActivitySelectCountry = styled.div`
         background-color: #1565c0;
         color: white;
         cursor: pointer;
+        ${props => props.disabled && `
+        cursor: not-allowed;
+        background-color: #242424;
+        `}
         transition: 0.1s all linear;
         &:hover {
             background-color: #242424;
@@ -237,6 +257,11 @@ const ActivityButton = styled.button`
     &:hover {
         background-color: #242424;
     }
+    
+    ${props => props.disabled && `
+    cursor: not-allowed;
+    background-color: #242424;
+    `}
 `
 
 

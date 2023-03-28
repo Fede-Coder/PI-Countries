@@ -81,7 +81,8 @@ const CardsInput = styled.input`
     text-align: center;
     color: #707070;
     padding: 10px 15px;
-    transition: 0.1s all linear;
+    transition: 0.1s all linear;    
+    ${props => props.disabled && `cursor: not-allowed;`}
 
     &:focus {
         outline: 2px solid #1565c0;
@@ -117,6 +118,7 @@ const CardsSelect = styled.select`
     padding: 10px 15px;
     transition: 0.1s all linear;
     margin-left: 5px;
+    ${props => props.disabled && `cursor: not-allowed;`}
     option {
         background-color: #e7e7e7;
         &:first-child {
@@ -147,6 +149,42 @@ const CardsPagination = styled.div`
     padding: 5px 0;
     border-bottom: 5px solid #b3b3b3;
     border-radius: 10px;
+    ${props => props.methodPage === 2 && `
+        display: flex;
+        justify-content: center;
+        flex-flow: row wrap;
+        align-items: stretch;
+        gap: 1rem;
+        & > div.mid {
+            flex-basis: 360px;
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+    `}
+`
+
+const CardsButtonPrevNext = styled.button`
+    font-size: 18px;
+    margin: 0 15px;
+    color: white;
+    border: none;
+    height: 38px;
+    border-radius: 10px;
+    padding: 0 10px;
+    transition: 0.1s all linear;
+    ${props => props.disableButton ? 
+    `
+    background-color: rgb(68, 68, 68);
+    cursor: not-allowed;
+    `
+    :
+    `
+    background-color: #1565c0; 
+    cursor: pointer;
+    &:hover {        
+        transform: scale(1.1);
+    }
+    ` }
 `
 
 const CardsButtonPage = styled.button`
@@ -176,5 +214,6 @@ export {
     CardsButton,
     CardsPagination,
     CardsButtonPage,
-    CardsSelect
+    CardsSelect,
+    CardsButtonPrevNext
 }

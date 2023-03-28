@@ -7,22 +7,30 @@ import Card from './Card';
 
 //Styles and images
 import { Wrapper } from '../../assets/css/styledGlobal';
-import { CardsBar, CardsBarDiv, CardsButtonPage, CardsDiv, CardsInput, CardsMain, CardsPagination, CardsSelect } from './StyledCards';
+import { CardsBar, CardsBarDiv, CardsButtonPage, CardsButtonPrevNext, CardsDiv, CardsInput, CardsMain, CardsPagination, CardsSelect } from './StyledCards';
 import Warning from '../../assets/icons/warning.svg'
 import Loading from '../../components/Loading/Loading'
 
 //Cards from all countries with search, filters and sort
 export default function Cards() {
-    
-    //Page configuration, to set the number of countries per page
-    const qtyPerPage = 10;
 
     const dispatch = useDispatch();
     const selector = useSelector(state => state.country);
+    
+    //methodPage = 1 - Method 1: simple pagination
+    //methodPage = 2 - Method 2: advanced pagination
+    const methodPage = 2;
+
+    //Page configuration, to set the number of countries per page
+    const qtyPerPage = 10;
+
+    //The total number of pages is calculated by dividing the total number of countries by the number of countries per page.
+    let totalPage = Math.ceil(selector.countries.length / qtyPerPage);
 
     //Function to set the current page in global state
     const handleOnClickPage = (numberPage) => {
         if(numberPage === '...') return
+        if(numberPage <= 0 || numberPage > totalPage) return;
         dispatch(setCurrentPage(numberPage))
     }
 
@@ -61,16 +69,18 @@ export default function Cards() {
     return(
         <CardsMain>
             <Wrapper>
-                {/* 
+                {/*
 
                 Inside the bar there is search, filter and sort
 
                 */}
                 <CardsBar>
+                    {/* Search by country name */}
                     <CardsBarDiv>
                         <span>Search by country name</span>
                         <CardsInput placeholder={'Search...'} name={'search'} disabled={selector.isFetching} value={selector.search} onChange={handleSearchByName}/>
                     </CardsBarDiv>
+                    {/* Filter by continent or type of activity */}
                     <CardsBarDiv>
                         <span>Filter by continent or type of activity</span>
                         <CardsSelect value={selector.filterBy} disabled={selector.isFetching} onChange={handleFilterBy}>
@@ -93,6 +103,7 @@ export default function Cards() {
                             }
                         </CardsSelect>
                     </CardsBarDiv>
+                    {/* Sort by name country or population */}
                     <CardsBarDiv>
                         <span>Sort by name country or population</span>
                         <CardsSelect value={selector.sortBy} disabled={selector.isFetching} onChange={handleSortBy}>
@@ -113,8 +124,8 @@ export default function Cards() {
 
                 */}
                 { selector.countries.length > qtyPerPage && !selector.isFetching &&
-                    <CardsPagination>
-                        <Pagination countries={selector.countries} qtyPerPage={qtyPerPage} currentPage={selector.currentPage} handleOnClickPage={handleOnClickPage} />
+                    <CardsPagination methodPage={methodPage}>
+                        <Pagination methodPage={methodPage} totalPage={totalPage} currentPage={selector.currentPage} handleOnClickPage={handleOnClickPage} />
                     </CardsPagination>
                 }
             </Wrapper>
@@ -129,7 +140,7 @@ export default function Cards() {
                         selector.isFetching && <Loading isFetching={selector.isFetching} size={'100px'} />
                     }
                     {
-                        !selector.isFetching && selector.countries.length === 0 && <><img src={Warning} alt='warning' /><h1>There are no countries to show.</h1></>
+                        !selector.isFetching && selector.countries.length === 0 && <><img src={Warning} alt='Warning' /><h1>There are no countries to show.</h1></>
                     }
                     {
                         !selector.isFetching && selector.countries.length > 0 && <CountriesPerPage countries={selector.countries} currentPage={selector.currentPage} qtyPerPage={qtyPerPage}/>
@@ -142,6 +153,8 @@ export default function Cards() {
 
 export function Pagination(props) {
 
+    //Generator an array with numbers passing by parameter the maximum number that you want to generate
+    //Example genArrayNumbers(5). Result= [1, 2, 3, 4, 5]
     const genArrayNumbers = (max_number) => {
         let i = 1;
         const genArrayNumbers = []
@@ -152,44 +165,51 @@ export function Pagination(props) {
         return genArrayNumbers;
     }
 
-    let totalPage = Math.ceil(props.countries.length / props.qtyPerPage);
+    //An array of numbers with the maximum number of pages is generated.
+    let numberGenerated = genArrayNumbers(props.totalPage)
 
-    let numberGenerated = genArrayNumbers(totalPage)
-
-    //methodPage = 1 - Method 1: simple pagination
-    //methodPage = 2 - Method 2: advanced pagination
-    const methodPage = 2;
-
+    //Pagination algorithm
+    //Number of neighboring pages. Example: [ n-2, n-1, n, n+1, n+2 ]
     let numNeighbors = 2;
     let arrayPages;
-    if(methodPage === 1) {
+    if(props.methodPage === 1) {
         arrayPages = numberGenerated;
-    } else if (methodPage === 2) {
-        if(totalPage <= 10) {
+    } else if (props.methodPage === 2) {
+        if(props.totalPage <= 10) {
             arrayPages = numberGenerated
         } else {
             if(numNeighbors+2 >= props.currentPage) {
-                arrayPages = [...numberGenerated.slice(undefined,props.currentPage+numNeighbors), '...', totalPage]
-            } else if(props.currentPage > totalPage-(numNeighbors+2)) {
+                arrayPages = [...numberGenerated.slice(undefined,props.currentPage+numNeighbors), '...', props.totalPage]
+            } else if(props.currentPage > props.totalPage-(numNeighbors+2)) {
                 arrayPages = [1, '...', ...numberGenerated.slice(props.currentPage-numNeighbors-1, undefined)]
             } else {
-                arrayPages = [1,'...',...numberGenerated.slice(props.currentPage-numNeighbors-1,props.currentPage+numNeighbors), '...', totalPage]
+                arrayPages = [1,'...',...numberGenerated.slice(props.currentPage-numNeighbors-1,props.currentPage+numNeighbors), '...', props.totalPage]
             }
         }
     }
-    
+
     return(<>
-        {
-            arrayPages.map((numberPage, index) => 
-                <CardsButtonPage key={index} onClick={() => props.handleOnClickPage(numberPage)} className={props.currentPage === numberPage ? 'active' : null}>{numberPage}</CardsButtonPage>
-            )
-        }
+        <div>
+            <CardsButtonPrevNext disableButton={props.currentPage-1 <= 0} onClick={() => props.handleOnClickPage(props.currentPage-1)}>Prev</CardsButtonPrevNext>
+        </div>
+        <div className='mid'>
+            {
+                arrayPages.map((numberPage, index) => 
+                    <CardsButtonPage key={index} onClick={() => props.handleOnClickPage(numberPage)} className={props.currentPage === numberPage ? 'active' : null}>{numberPage}</CardsButtonPage>
+                )
+            }
+        </div>
+        <div>
+            <CardsButtonPrevNext disableButton={props.currentPage+1 > props.totalPage} onClick={() => props.handleOnClickPage(props.currentPage+1)}>Next</CardsButtonPrevNext>
+        </div>
     </>)
 }
 
 export function CountriesPerPage(props) {
+    //The start and end variables are for generating with Array.prototype.slice()
     const start = props.currentPage*props.qtyPerPage-props.qtyPerPage;
     const end = props.currentPage*props.qtyPerPage;
+
     return(<>        
         {
             props.countries && props.countries.slice(start, end).map((country, index) => 

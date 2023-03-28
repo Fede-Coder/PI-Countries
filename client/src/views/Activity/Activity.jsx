@@ -10,6 +10,7 @@ import Summer from '../../assets/icons/summer.svg';
 import Fall from '../../assets/icons/fall.svg';
 import Winter from '../../assets/icons/winter.svg';
 import Spring from '../../assets/icons/spring.svg';
+import Warning from '../../assets/icons/warning.svg'
 
 export default function Activity() {
 
@@ -119,16 +120,16 @@ export default function Activity() {
                     <ActivityForm onSubmit={handleOnSubmit}>
                         <label>Name of the activity</label>
                         <span>{errors.name}</span>
-                        <ActivityInputText isError={errors.name} type={'text'} name={'name'} value={input.name} onChange={handleInput}/>
+                        <ActivityInputText disabled={selector.isFetching} isError={errors.name} type={'text'} name={'name'} value={input.name} onChange={handleInput}/>
                         <label>Difficulty</label>
                         <span>{errors.difficulty}</span>
-                        <ActivityInputRange type={'range'} name={'difficulty'} value={input.difficulty} min={'0'} max={'5'} onChange={handleInput}/>
+                        <ActivityInputRange disabled={selector.isFetching} type={'range'} name={'difficulty'} value={input.difficulty} min={'0'} max={'5'} onChange={handleInput}/>
                         {/* {input.difficulty} */}
                         <label>Duration in hours</label>
                         <span>{errors.duration}</span>
-                        <ActivityInputText isError={errors.duration} type={'number'} name={'duration'} value={input.duration} min={'1'} max={'72'} onChange={handleInput} />
+                        <ActivityInputText disabled={selector.isFetching} isError={errors.duration} type={'number'} name={'duration'} value={input.duration} min={'1'} max={'72'} onChange={handleInput} />
                         <label>Season</label>
-                        <ActivitySelect name={'season'} value={input.season} onChange={handleInput}>
+                        <ActivitySelect disabled={selector.isFetching} name={'season'} value={input.season} onChange={handleInput}>
                             <option>Summer</option>
                             <option>Fall</option>
                             <option>Winter</option>
@@ -136,8 +137,8 @@ export default function Activity() {
                         </ActivitySelect>
                         <label>Select country</label>
                         <span>{errors.countrySelected}</span>
-                        <ActivitySelectCountry>
-                            <ActivityInputText isError={errors.countrySelected} type={'text'} list={'countries'} name={'country'} value={input.country} onChange={handleInput}/>
+                        <ActivitySelectCountry disabled={selector.isFetching}>
+                            <ActivityInputText disabled={selector.isFetching} isError={errors.countrySelected} type={'text'} list={'countries'} name={'country'} value={input.country} onChange={handleInput}/>
                             <button type={'button'} onClick={handleAddCountry}>+</button>
                             <datalist id={'countries'}>
                                 {
@@ -161,27 +162,35 @@ export default function Activity() {
                                 ''
                             }
                         </ActivitySelectCountry>
-                        <ActivityButton type={'submit'}><Loading isFetching={selector.isFetching} />Create activity</ActivityButton>
+                        <ActivityButton disabled={selector.isFetching}  type={'submit'}><Loading isFetching={selector.isFetching} />Create activity</ActivityButton>
                     </ActivityForm>
                 </ActivityDivLeft>
                 <ActivityDivRight>
                     <ActivityTitle>Activities list</ActivityTitle>
-                    <ActivityDiv>
-                        <div>
-                            <h3>Name</h3>
-                            <h3>Difficulty</h3>
-                            <h3>Duration</h3>
-                            <h3>Season</h3>
-                        </div>
-                        {
-                            selector.activities && selector.activities.map((act, index) =>
-                                <ActivitiesButton key={index} onClick={() => handleOnClickActivity(act.name)}>
-                                    <ActivitiesButtonDiv>{act.name}</ActivitiesButtonDiv>
-                                    <ActivitiesButtonDiv isBar valueDiff={act.difficulty}><span>{act.difficulty*20}%</span><div></div></ActivitiesButtonDiv>
-                                    <ActivitiesButtonDiv>{act.duration} hrs.</ActivitiesButtonDiv>
-                                    <ActivitiesButtonDiv>{getIconSeason(act.season)}<div>{act.season}</div></ActivitiesButtonDiv>
-                                </ActivitiesButton>
-                            )
+                    <ActivityDiv activities={selector.activities.length}  >
+                        
+                        { selector.activities.length !== 0
+                        ?
+                            <>
+                                <div>
+                                    <h3>Name</h3>
+                                    <h3>Difficulty</h3>
+                                    <h3>Duration</h3>
+                                    <h3>Season</h3>
+                                </div>
+                                {
+                                    selector.activities.map((act, index) =>
+                                    <ActivitiesButton key={index} onClick={() => handleOnClickActivity(act.name)}>
+                                        <ActivitiesButtonDiv>{act.name}</ActivitiesButtonDiv>
+                                        <ActivitiesButtonDiv isBar valueDiff={act.difficulty}><span>{act.difficulty*20}%</span><div></div></ActivitiesButtonDiv>
+                                        <ActivitiesButtonDiv>{act.duration} hrs.</ActivitiesButtonDiv>
+                                        <ActivitiesButtonDiv>{getIconSeason(act.season)}<div>{act.season}</div></ActivitiesButtonDiv>
+                                    </ActivitiesButton>
+                                )
+                                }
+                            </>
+                        :
+                        <><img src={Warning} alt='warning' /><h1>There are no activities to show. Start creating the activities</h1></>
                         }
                     </ActivityDiv>
                 </ActivityDivRight>
