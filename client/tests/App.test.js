@@ -28,7 +28,7 @@ describe('<App />', () => {
     global.fetch = nodeFetch;
 
     let store;
-    const routes = ['/', '/home', '/activities', '/detail/ARG']
+    const routes = ['/', '/home', '/activity', '/detail/ARG']
     const mockStore = configureStore([thunk])
     const state = {
         country: {
@@ -54,12 +54,12 @@ describe('<App />', () => {
         let id = null;
         apiMock
            .get((uri) => {
-              id = Number(uri.split('/').pop());
+              id = (uri.split('/').pop());
               return !!id;
            })
            .reply(200, (uri, requestBody) => {
               return (
-                 data.find((country) => country.id === id) ||
+               Object.values(data).find((country) => country.id === id) ||
                  {}
               );
            });
@@ -81,11 +81,10 @@ describe('<App />', () => {
   
         it('Should be rendered in the path "/home"', () => {
            const app = mount(componentToUse(routes[1]));
-           console.log(app);
            expect(app.find(Nav)).toHaveLength(1);
         });
 
-        it('Should be rendered in the path "/activities"', () => {
+        it('Should be rendered in the path "/activity"', () => {
            const app = mount(componentToUse(routes[2]));
            expect(app.find(Nav)).toHaveLength(1);
         });

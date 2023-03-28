@@ -16,7 +16,7 @@ describe("<Nav />", () => {
     expect(isReact.classComponent(Nav)).toBeFalsy();
   });
   
-  it('Debería renderizar dos <NavLink to="" />. El primero que vaya a "/home" y el segundo a "/activities"', () => {
+  it('Should render two <NavLink to="" /> with styled-component. The first to go to "/home" and the second to "/activity"', () => {
     expect(nav.find(NavALink).length).toBeGreaterThanOrEqual(2);
     expect(nav.find(NavALink).find({to:"/home"}).length).toBe(1)
     expect(nav.find(NavALink).find({to:"/activity"}).length).toBe(1)
