@@ -126,6 +126,7 @@ export default function Detail() {
                                             <li><span>Subregion:</span> {selector.countryDetail.subregion ? selector.countryDetail.subregion : 'None'}</li>
                                             <li><span>Area:</span> {selector.countryDetail.area.toLocaleString('en-US')} km²</li>
                                             <li><span>Population:</span> {selector.countryDetail.population.toLocaleString('en-US')}</li>
+                                            <li><span>Population density:</span> {Math.round(selector.countryDetail.population/selector.countryDetail.area).toLocaleString('en-US')}/km²</li>
                                         </ul>
                                     </DetailInfo>
                                 
