@@ -7,7 +7,7 @@ import Card from './Card';
 
 //Styles and images
 import { Wrapper } from '../../assets/css/styledGlobal';
-import { CardsBar, CardsBarDiv, CardsButtonPage, CardsButtonPrevNext, CardsDiv, CardsInput, CardsMain, CardsPagination, CardsSelect } from './StyledCards';
+import { CardsBar, CardsBarDiv, CardsButton, CardsButtonPage, CardsButtonPrevNext, CardsDiv, CardsInput, CardsMain, CardsPagination, CardsSelect } from './StyledCards';
 import Warning from '../../assets/icons/warning.svg'
 import Loading from '../../components/Loading/Loading'
 
@@ -27,6 +27,8 @@ export default function Cards() {
     //The total number of pages is calculated by dividing the total number of countries by the number of countries per page.
     let totalPage = Math.ceil(selector.countries.length / qtyPerPage);
 
+    const inputRefSearchBar = React.useRef(null)
+
     //Function to set the current page in global state
     const handleOnClickPage = (numberPage) => {
         if(numberPage === '...') return
@@ -35,8 +37,8 @@ export default function Cards() {
     }
 
     //Function to set the search typed by the user and set page 1 as current
-    const handleSearchByName = (event) => {
-        dispatch(searchCountries(event.target.value))
+    const handleSearchByName = () => {
+        dispatch(searchCountries(inputRefSearchBar.current.value))
         dispatch(setCurrentPage(1))
     }
 
@@ -78,7 +80,8 @@ export default function Cards() {
                     {/* Search by country name */}
                     <CardsBarDiv>
                         <span>Search by country name</span>
-                        <CardsInput placeholder={'Search...'} name={'search'} disabled={selector.isFetching} value={selector.search} onChange={handleSearchByName}/>
+                        <CardsInput placeholder={'Search...'} name={'search'} disabled={selector.isFetching} ref={inputRefSearchBar}/>
+                        <CardsButton onClick={handleSearchByName}>🔎</CardsButton>
                     </CardsBarDiv>
                     {/* Filter by continent or type of activity */}
                     <CardsBarDiv>

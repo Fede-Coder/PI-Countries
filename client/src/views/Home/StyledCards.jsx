@@ -65,6 +65,7 @@ const CardsBar = styled.div`
 const CardsBarDiv = styled.div`
     display: inline-block;
     & > span {
+        flex: 0 0;
         display: block;
         font-size: 14px;
         border-bottom: 1px solid #1565c0;
@@ -73,6 +74,8 @@ const CardsBarDiv = styled.div`
 `
 
 const CardsInput = styled.input`
+    vertical-align:middle;
+    display: table-cell;
     border-radius: 15px;
     font-size: 20px;
     border: none;
@@ -87,9 +90,12 @@ const CardsInput = styled.input`
     &:focus {
         outline: 2px solid #1565c0;
     }
+    
 `
 
 const CardsButton = styled.button`
+    vertical-align:middle;
+    display: table-cell;
     font-size: 20px;
     margin: 0 5px 0 5px;
     background-color: ${props => (props.bgRed && '#e92a2a') || '#1565c0'};
