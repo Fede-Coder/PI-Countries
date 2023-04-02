@@ -27,9 +27,9 @@ router.get('/', async (req, res) => {
 })
 
 router.put('/', async (req, res) => {
-    const { id, name, difficulty, duration, season, country } = req.body
+    const { id, name, difficulty, duration, season, countryAdd, countryRemove } = req.body
     try {
-        const result = await modifyActivities(id, name, difficulty, duration, season, country)
+        const result = await modifyActivities(id, name, difficulty, duration, season, countryAdd, countryRemove)
         res.status(200).send(result)
     } catch (error) {
         res.status(400).json({error: error.message})
