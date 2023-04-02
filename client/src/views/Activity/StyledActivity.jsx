@@ -25,13 +25,39 @@ const ActivityDivRight = styled.form`
     }
 `
 
-const ActivityTitle = styled.h1`
-    margin: 0;
+const ActivityTitle = styled.div`
     color: black;
     border-bottom: 2px solid #1565c0;
     background-color: #ffffff;
     padding: 5px 15px;
     border-radius: 10px 10px 0 0;
+
+    display: flex;
+    justify-content: space-between;
+
+    & > h1 {
+        margin: 0;
+    }
+
+    & > button {
+        font-size: 16px;
+        margin: 0px 5px;
+        background-color: ${props => props.editMode ? 'rgb(36, 36, 36)' : 'rgb(21, 101, 192)'};
+        padding: 8px;
+        border: medium none;
+        border-radius: 15px;
+        cursor: pointer;
+        transition: all 0.1s linear 0s;
+        color: white;
+
+        &:hover {
+            background-color: rgb(36, 36, 36);
+        }
+
+        & > img {
+            width: 1em;
+        }
+    }
 `
 
 const ActivityForm = styled.form`
@@ -60,7 +86,7 @@ const ActivityDiv = styled.div`
     & > div {
         display: grid;
         align-items: stretch;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(${props => props.editMode ? '5' : '4' }, 1fr);
         width: 90%;
         margin: 0 auto;
         text-align: center;
@@ -86,13 +112,12 @@ const ActivityDiv = styled.div`
 const ActivitiesButton = styled.button`
     display: grid;
     align-items: center;
-    grid-template-columns: repeat(4, minmax(25%, 1fr));
+    grid-template-columns: repeat(${props => props.editMode ? '5, minmax(20%, 1fr)' : '4, minmax(25%, 1fr)'});
     width: 90%;
     padding: 15px;
     margin: 10px auto;
     transition: 0.1s all linear;
     border: none;
-    cursor: pointer;
     font-size: 16px;
     font-weight: 500;
 
@@ -100,6 +125,15 @@ const ActivitiesButton = styled.button`
         width: 30px;
     }
 
+    ${props => props.editMode ?
+    `
+    &:hover {
+        background: #e9e9ed;
+    }
+    ` 
+    : 
+    `
+    cursor: pointer;
     &:hover {
         transform: scale(1.03);
         box-shadow: 0 0 3px black;
@@ -111,10 +145,33 @@ const ActivitiesButton = styled.button`
             }
         }
     }
+    `
+    }
+    
 `
 
 const ActivitiesButtonDiv = styled.div`
     overflow-wrap: break-word;
+
+    & > button {
+        font-size: 18px;
+        margin: 0px 5px;
+        background-color: rgb(192, 21, 21);
+        padding: 8px;
+        border: medium none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.1s linear 0s;
+        color: white;
+        & > img {
+            width: 1em;
+        }
+
+        &:hover {
+            background-color: rgb(36, 36, 36);
+        }
+    }
+
     ${props => props.isBar && `
     width: 60%;
     height: 50%;

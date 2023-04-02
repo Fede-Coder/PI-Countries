@@ -36,8 +36,8 @@ router.put('/', async (req, res) => {
     }
 })
 
-router.delete('/', async (req, res) => {
-    const { id } = req.body
+router.delete('/:id', async (req, res) => {
+    const { id } = req.params
     try {
         await deleteActivities(id)
         res.status(200).json({message: 'Deleted activity'})
