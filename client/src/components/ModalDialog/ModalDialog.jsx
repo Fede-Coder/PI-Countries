@@ -85,6 +85,7 @@ export function TypeEdit({selector, dispatch}) {
     }
 
     const [errors, setErrors] = React.useState({})
+    const sameNameInDb = selector.activities.some(act => act.id !== activity.id && act.name === input.name)
 
     const handleOnClick = (event) => {
         const { value } = event.target
@@ -101,7 +102,8 @@ export function TypeEdit({selector, dispatch}) {
                     countryRemove: input.countryRemove.map(country => country.name)
                 }
             ))
-            dispatch(showModal('', ''))
+            dispatch(showModal('', ''))            
+            alert('Updated activity')
         }
     }
 
@@ -155,12 +157,12 @@ export function TypeEdit({selector, dispatch}) {
     }
 
     React.useEffect(() => {        
-        setErrors(validation({...input}))
-    }, [input]);
+        setErrors(validation({...input}, sameNameInDb))
+    }, [input, sameNameInDb]);
 
     return(<>
         <ModalTitle>Editing activity</ModalTitle>
-        <ModalContent isEqualInputOldNew={isEqualInputOldNew()}>
+        <ModalContent isEqualInputOldNew={isEqualInputOldNew() || Object.keys(errors).length > 0}>
             <ModalForm >                
                 <label>Name of the activity</label>
                 <span>{errors.name}</span>
@@ -230,13 +232,13 @@ export function TypeEdit({selector, dispatch}) {
             </ModalForm>
             <div>
                 <button value={'cancel'} className="cancel" onClick={handleOnClick}>Cancel</button>
-                <button disabled={isEqualInputOldNew()} value={'update'} className="update" onClick={handleOnClick}>Update</button>
+                <button disabled={isEqualInputOldNew() || Object.keys(errors).length > 0} value={'update'} className="update" onClick={handleOnClick}>Update</button>
             </div>
         </ModalContent>
     </>)
 }
 
-export function validation(inputs) {
+export function validation(inputs, sameNameInDb) {
     let errors = {}
 
     if(inputs.name.trim().length === 0) {
@@ -244,6 +246,8 @@ export function validation(inputs) {
     } else {
         if(inputs.name.length > 25) {
             errors.name = 'Activity name must be less than 25 characters'
+        } else if(sameNameInDb) {
+            errors.name= 'That name already exists, enter a different name'
         }
     }
 
