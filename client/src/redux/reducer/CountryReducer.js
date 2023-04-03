@@ -1,4 +1,4 @@
-import { CLEAR_COUNTRY_DETAIL, ERROR_SEARCH_COUNTRIES, FILTER_COUNTRIES, GET_ALL_ACTIVITIES, GET_ALL_CONTINENTS, GET_ALL_COUNTRIES, GET_COUNTRY_DETAIL, IS_FETCHING, SEARCH_COUNTRIES, SET_CURRENT_PAGE, SET_FILTER_COUNTRIES,  SET_SEARCH, SET_SORT_COUNTRIES, SORT_COUNTRIES } from "../actions/types"
+import { CLEAR_COUNTRY_DETAIL, ERROR_SEARCH_COUNTRIES, FILTER_COUNTRIES, GET_ALL_ACTIVITIES, GET_ALL_CONTINENTS, GET_ALL_COUNTRIES, GET_COUNTRY_DETAIL, IS_FETCHING, SEARCH_COUNTRIES, SET_CURRENT_PAGE, SET_FILTER_COUNTRIES,  SET_SEARCH, SET_SORT_COUNTRIES, SET_TYPE_MODAL, SHOW_MODAL, SORT_COUNTRIES } from "../actions/types"
 
 const initialState = {
     isFetching: false,
@@ -12,7 +12,12 @@ const initialState = {
     filterBy: 'Continent',
     filterOf: 'All',
     sortBy: 'Country',
-    sortOf: 'Ascending'
+    sortOf: 'Ascending',
+    modal: {
+        show: false,
+        id: '',
+        type: ''
+    }
 }
 
 const CountryReducer = (state = initialState, action) => {
@@ -33,6 +38,18 @@ const CountryReducer = (state = initialState, action) => {
             return {
                 ...state,
                 search: action.payload
+            }
+        }
+        case SHOW_MODAL: {
+            return {
+                ...state,
+                modal: {...state.modal, show: !state.modal.show}
+            }
+        }
+        case SET_TYPE_MODAL: {
+            return {
+                ...state,
+                modal: {...state.modal, id: action.payload.id, type: action.payload.typeModal}
             }
         }
         case GET_ALL_COUNTRIES: {

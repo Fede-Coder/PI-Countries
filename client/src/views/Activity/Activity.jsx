@@ -2,7 +2,7 @@ import { ActivitiesButton, ActivitiesButtonDiv, ActivityButton, ActivityDiv, Act
 import { Wrapper } from '../../assets/css/styledGlobal'
 import { useDispatch, useSelector } from 'react-redux';
 import React from 'react';
-import { createActivity, deleteActivity, setCurrentPage, setFilterCountries, setSearch } from '../../redux/actions/CountryAction';
+import { createActivity, setCurrentPage, setFilterCountries, setSearch, showModal } from '../../redux/actions/CountryAction';
 import {useNavigate} from 'react-router-dom'
 import Loading from '../../components/Loading/Loading'
 
@@ -116,11 +116,16 @@ export default function Activity() {
         }
     }
 
+    const handleOpenModal = (id, type) => {
+        // dispatch(deleteActivity(act.id))
+        dispatch(showModal(id, type))
+    }
+
     return(
         <ActivityMain>
             <Wrapper>
                 <ActivityDivLeft>
-                    <ActivityTitle>Create activity</ActivityTitle>
+                    <ActivityTitle><h1>Create activity</h1></ActivityTitle>
                     <ActivityForm onSubmit={handleOnSubmit}>
                         <label>Name of the activity</label>
                         <span>{errors.name}</span>
@@ -170,8 +175,8 @@ export default function Activity() {
                     </ActivityForm>
                 </ActivityDivLeft>
                 <ActivityDivRight>
-                    <ActivityTitle editMode={editMode} ><h1>Activities list</h1> <button type={'button'} onClick={() => setEditMode(!editMode)} ><img src={Edit} alt={'Edit'} /> Edit mode</button> </ActivityTitle>
-                    <ActivityDiv editMode={editMode} activities={selector.activities.length}  >
+                    <ActivityTitle editMode={editMode} ><h1>Activities list</h1> <button disabled={selector.isFetching} type={'button'} onClick={() => setEditMode(!editMode)} ><img src={Edit} alt={'Edit'} /> Edit mode</button> </ActivityTitle>
+                    <ActivityDiv editMode={editMode} activities={selector.activities.length}>
                         
                         { selector.activities.length !== 0
                         ?
@@ -185,7 +190,7 @@ export default function Activity() {
                                 </div>
                                 {
                                     selector.activities.map((act, index) =>
-                                    <ActivitiesButton type={'button'} editMode={editMode}  key={index} onClick={() => editMode ? undefined : handleOnClickActivity(act.name)}>
+                                    <ActivitiesButton editMode={editMode}  key={index} onClick={() => editMode ? undefined : handleOnClickActivity(act.name)}>
                                         <ActivitiesButtonDiv>{act.name}</ActivitiesButtonDiv>
                                         <ActivitiesButtonDiv isBar valueDiff={act.difficulty}><span>{act.difficulty*20}%</span><div></div></ActivitiesButtonDiv>
                                         <ActivitiesButtonDiv>{act.duration} hrs.</ActivitiesButtonDiv>
@@ -193,8 +198,8 @@ export default function Activity() {
                                         {
                                             editMode && 
                                             <ActivitiesButtonDiv>
-                                                <button type={'button'} onClick={() => alert('hace algo')}><img src={Edit} alt={'Edit'} /></button>
-                                                <button type={'button'} onClick={() => dispatch(deleteActivity(act.id))}><img src={Trash} alt={'Trash'} /></button>
+                                                <button type={'button'} onClick={() => handleOpenModal(act.id, 'edit')}><img src={Edit} alt={'Edit'} /></button>
+                                                <button type={'button'} onClick={() => handleOpenModal(act.id, 'delete')}><img src={Trash} alt={'Trash'} /></button>
                                             </ActivitiesButtonDiv>
                                         }
                                     </ActivitiesButton>

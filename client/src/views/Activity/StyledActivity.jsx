@@ -83,9 +83,8 @@ const ActivityDiv = styled.div`
     border-radius: 0 0 10px 10px;
     padding: 10px 10px;
 
-    & > div {
+    & > div:first-child {
         display: grid;
-        align-items: stretch;
         grid-template-columns: repeat(${props => props.editMode ? '5' : '4' }, 1fr);
         width: 90%;
         margin: 0 auto;
@@ -109,9 +108,11 @@ const ActivityDiv = styled.div`
     
 `
 
-const ActivitiesButton = styled.button`
+const ActivitiesButton = styled.div`
     display: grid;
     align-items: center;
+    text-align: center;
+    background: #e9e9ed;
     grid-template-columns: repeat(${props => props.editMode ? '5, minmax(20%, 1fr)' : '4, minmax(25%, 1fr)'});
     width: 90%;
     padding: 15px;
