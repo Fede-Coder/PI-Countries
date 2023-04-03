@@ -10,10 +10,10 @@ const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}
   dialect: 'postgres',
   protocol: 'postgres',
   logging: false,
-  // dialectOptions: {
-  //   ssl: true,
-  //   native:true,
-  // }
+  dialectOptions: {
+    ssl: true,
+    native:true,
+  }
 });
 const basename = path.basename(__filename);
 
