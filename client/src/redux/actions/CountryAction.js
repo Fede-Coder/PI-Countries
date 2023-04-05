@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { CLEAR_COUNTRY_DETAIL, CREATE_ACTIVITY, ERROR_CREATE_ACTIVITY, ERROR_GET_COUNTRY_DETAIL, ERROR_SEARCH_COUNTRIES, FILTER_COUNTRIES, GET_ALL_ACTIVITIES, GET_ALL_CONTINENTS, GET_ALL_COUNTRIES, GET_COUNTRY_DETAIL, IS_FETCHING, SEARCH_COUNTRIES, SET_CURRENT_PAGE, SET_FILTER_COUNTRIES, SET_SEARCH, SET_SORT_COUNTRIES, SORT_COUNTRIES } from './types'
+import { CLEAR_COUNTRY_DETAIL, CREATE_ACTIVITY, ERROR_CREATE_ACTIVITY, ERROR_DELETE_ACTIVITY, ERROR_GET_COUNTRY_DETAIL, ERROR_MODIFIED_ACTIVITY, ERROR_SEARCH_COUNTRIES, FILTER_COUNTRIES, GET_ALL_ACTIVITIES, GET_ALL_CONTINENTS, GET_ALL_COUNTRIES, GET_COUNTRY_DETAIL, IS_FETCHING, SEARCH_COUNTRIES, SET_CURRENT_PAGE, SET_FILTER_COUNTRIES, SET_SEARCH, SET_SORT_COUNTRIES, SET_TYPE_MODAL, SHOW_MODAL, SORT_COUNTRIES } from './types'
 const URL = 'https://countries-api-06tp.onrender.com'
 
 const setCurrentPage = (numberPage) => {
@@ -116,6 +116,47 @@ const createActivity = (activity) => {
     }
 }
 
+const deleteActivity = (id) => {
+    return async function(dispatch) {
+        dispatch({type: IS_FETCHING, payload: true})
+        setTimeout(async function() {
+            try {
+                await axios.delete(`${URL}/activities/${id}`)
+                dispatch(resetCountries())
+                dispatch(getAllActivities())
+                dispatch({type: IS_FETCHING, payload: false})
+            } catch (error) {
+                dispatch({type: ERROR_DELETE_ACTIVITY})
+                dispatch({type: IS_FETCHING, payload: false})
+            }
+        }, 2000)
+    }
+}
+
+const modifyActivity = (activity) => {
+    return async function(dispatch) {        
+        dispatch({type: IS_FETCHING, payload: true})
+        setTimeout(async function() {
+            try {
+                await axios.put(`${URL}/activities`, activity)
+                dispatch(resetCountries())
+                dispatch(getAllActivities())
+                dispatch({type: IS_FETCHING, payload: false})
+            } catch (error) {
+                dispatch({type: ERROR_MODIFIED_ACTIVITY})
+                dispatch({type: IS_FETCHING, payload: false})
+            }
+        }, 2000)
+    }
+}
+
+const showModal = (id, typeModal) => {
+    return function(dispatch) {
+        dispatch({type: SET_TYPE_MODAL, payload: {id, typeModal}})
+        dispatch({type: SHOW_MODAL})
+    }
+}
+
 export {
     setCurrentPage,
     getAllCountries,
@@ -127,4 +168,7 @@ export {
     setFilterCountries,
     setSearch,
     createActivity,
+    deleteActivity,
+    modifyActivity,
+    showModal,
 }

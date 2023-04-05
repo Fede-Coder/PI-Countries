@@ -186,6 +186,7 @@ export function Pagination(props) {
                 arrayPages = [...numberGenerated.slice(undefined,props.currentPage+numNeighbors), '...', props.totalPage]
             } else if(props.currentPage > props.totalPage-(numNeighbors+2)) {
                 arrayPages = [1, '...', ...numberGenerated.slice(props.currentPage-numNeighbors-1, undefined)]
+
             } else {
                 arrayPages = [1,'...',...numberGenerated.slice(props.currentPage-numNeighbors-1,props.currentPage+numNeighbors), '...', props.totalPage]
             }

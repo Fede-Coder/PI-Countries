@@ -2,7 +2,7 @@ import { ActivitiesButton, ActivitiesButtonDiv, ActivityButton, ActivityDiv, Act
 import { Wrapper } from '../../assets/css/styledGlobal'
 import { useDispatch, useSelector } from 'react-redux';
 import React from 'react';
-import { createActivity, setCurrentPage, setFilterCountries, setSearch } from '../../redux/actions/CountryAction';
+import { createActivity, setCurrentPage, setFilterCountries, setSearch, showModal } from '../../redux/actions/CountryAction';
 import {useNavigate} from 'react-router-dom'
 import Loading from '../../components/Loading/Loading'
 
@@ -11,6 +11,8 @@ import Fall from '../../assets/icons/fall.svg';
 import Winter from '../../assets/icons/winter.svg';
 import Spring from '../../assets/icons/spring.svg';
 import Warning from '../../assets/icons/warning.svg'
+import Edit from '../../assets/icons/edit.svg'
+import Trash from '../../assets/icons/trash.svg'
 
 export default function Activity() {
 
@@ -26,6 +28,8 @@ export default function Activity() {
         country: '',
         countrySelected: [],
     })
+    
+    const [editMode, setEditMode] = React.useState(false)
 
     const [errors, setErrors] = React.useState({})
 
@@ -112,11 +116,16 @@ export default function Activity() {
         }
     }
 
+    const handleOpenModal = (id, type) => {
+        // dispatch(deleteActivity(act.id))
+        dispatch(showModal(id, type))
+    }
+
     return(
         <ActivityMain>
             <Wrapper>
                 <ActivityDivLeft>
-                    <ActivityTitle>Create activity</ActivityTitle>
+                    <ActivityTitle><h1>Create activity</h1></ActivityTitle>
                     <ActivityForm onSubmit={handleOnSubmit}>
                         <label>Name of the activity</label>
                         <span>{errors.name}</span>
@@ -142,7 +151,7 @@ export default function Activity() {
                             <button type={'button'} onClick={handleAddCountry}>+</button>
                             <datalist id={'countries'}>
                                 {
-                                    selector.allCountries && selector.allCountries.map(country =>
+                                    selector.allCountries && selector.allCountries.slice().sort((a,b) => a.name > b.name).map(country =>
                                         <option key={country.id}>{country.name}</option>
                                     )
                                 }
@@ -166,8 +175,8 @@ export default function Activity() {
                     </ActivityForm>
                 </ActivityDivLeft>
                 <ActivityDivRight>
-                    <ActivityTitle>Activities list</ActivityTitle>
-                    <ActivityDiv activities={selector.activities.length}  >
+                    <ActivityTitle editMode={editMode} ><h1>Activities list</h1> <button disabled={selector.isFetching} type={'button'} onClick={() => setEditMode(!editMode)} ><img src={Edit} alt={'Edit'} /> Edit mode</button> </ActivityTitle>
+                    <ActivityDiv editMode={editMode} activities={selector.activities.length}>
                         
                         { selector.activities.length !== 0
                         ?
@@ -177,14 +186,22 @@ export default function Activity() {
                                     <h3>Difficulty</h3>
                                     <h3>Duration</h3>
                                     <h3>Season</h3>
+                                    { editMode && <h3>Action</h3> }
                                 </div>
                                 {
                                     selector.activities.map((act, index) =>
-                                    <ActivitiesButton key={index} onClick={() => handleOnClickActivity(act.name)}>
+                                    <ActivitiesButton editMode={editMode}  key={index} onClick={() => editMode ? undefined : handleOnClickActivity(act.name)}>
                                         <ActivitiesButtonDiv>{act.name}</ActivitiesButtonDiv>
                                         <ActivitiesButtonDiv isBar valueDiff={act.difficulty}><span>{act.difficulty*20}%</span><div></div></ActivitiesButtonDiv>
                                         <ActivitiesButtonDiv>{act.duration} hrs.</ActivitiesButtonDiv>
                                         <ActivitiesButtonDiv>{getIconSeason(act.season)}<div>{act.season}</div></ActivitiesButtonDiv>
+                                        {
+                                            editMode && 
+                                            <ActivitiesButtonDiv>
+                                                <button type={'button'} onClick={() => handleOpenModal(act.id, 'edit')}><img src={Edit} alt={'Edit'} /></button>
+                                                <button type={'button'} onClick={() => handleOpenModal(act.id, 'delete')}><img src={Trash} alt={'Trash'} /></button>
+                                            </ActivitiesButtonDiv>
+                                        }
                                     </ActivitiesButton>
                                 )
                                 }

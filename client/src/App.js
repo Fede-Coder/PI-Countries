@@ -14,6 +14,7 @@ import Activity from './views/Activity/Activity'
 import { useDispatch } from 'react-redux'
 import React from 'react'
 import { getAllActivities, getAllCountries } from './redux/actions/CountryAction'
+import ModalDialog from './components/ModalDialog/ModalDialog'
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
 
     return (
         <>
+            <ModalDialog />
             <Header />
             <Nav />
             <Routes>
