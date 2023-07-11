@@ -163,9 +163,9 @@ const CountryReducer = (state = initialState, action) => {
                 //Countries
                 const sort = state.sortOf === 'Ascending'
                 ?                
-                state.countries.slice().sort((a,b) => a.name > b.name) //Ascending
+                [...state.countries.sort((a,b) => a.name.localeCompare(b.name))] //Ascending
                 :
-                state.countries.slice().sort((a,b) => a.name < b.name) //Descending
+                [...state.countries.sort((a,b) => b.name.localeCompare(a.name))] //Descending
 
                 return {
                     ...state,
@@ -175,9 +175,9 @@ const CountryReducer = (state = initialState, action) => {
                 //Population
                 const sort = state.sortOf === 'Ascending'
                 ?                
-                state.countries.slice().sort((a,b) => a.population > b.population) //Ascending
+                [...state.countries.sort((a,b) => a.population - b.population)] //Ascending
                 :                
-                state.countries.slice().sort((a,b) => a.population < b.population) //Descending
+                [...state.countries.sort((a,b) => b.population - a.population)] //Descending
 
                 return {
                     ...state,
@@ -187,9 +187,9 @@ const CountryReducer = (state = initialState, action) => {
                 //Population density
                 const sort = state.sortOf === 'Ascending'
                 ?                
-                state.countries.slice().sort((a,b) => Math.round(a.population/a.area) > Math.round(b.population/b.area)) //Ascending
+                [...state.countries.sort((a,b) => Math.round(a.population/a.area) - Math.round(b.population/b.area))] //Ascending
                 :                
-                state.countries.slice().sort((a,b) => Math.round(a.population/a.area) < Math.round(b.population/b.area)) //Descending
+                [...state.countries.sort((a,b) => Math.round(b.population/b.area) - Math.round(a.population/a.area))] //Descending
 
                 return {
                     ...state,

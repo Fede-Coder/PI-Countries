@@ -218,7 +218,7 @@ export function CountriesPerPage(props) {
     return(<>        
         {
             props.countries && props.countries.slice(start, end).map((country, index) => 
-                <Card key={index} id={country.id} name={country.name} continent={country.continent} image={country.image} />
+                <Card key={index} id={country.id} name={country.name} continent={country.continent} image={country.image} population={country.population} popDensity={Math.round(country.population/country.area).toLocaleString('en-US')}/>
             )
         }
     </>)
